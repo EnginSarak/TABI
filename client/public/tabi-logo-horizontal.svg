@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 508 160" width="508" height="160">
+
+  <!-- ICON MARK (scaled down, left side) -->
+  <!-- Outer ring -->
+  <circle cx="80" cy="80" r="72" fill="none" stroke="white" stroke-width="4.5"/>
+  <!-- Torii beam -->
+  <rect x="24" y="46" width="112" height="6" rx="3" fill="white"/>
+  <!-- Kanji 旅 -->
+  <text
+    x="80"
+    y="100"
+    font-family="'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', 'Times New Roman', serif"
+    font-size="62"
+    font-weight="600"
+    fill="white"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >旅</text>
+  <!-- TABI under kanji in icon -->
+  <text
+    x="80"
+    y="140"
+    font-family="'Helvetica Neue', 'SF Pro Display', sans-serif"
+    font-size="10"
+    font-weight="700"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="5.5"
+    opacity="0.7"
+  >TABI</text>
+
+  <!-- VERTICAL DIVIDER -->
+  <line x1="182" y1="30" x2="182" y2="130" stroke="white" stroke-width="1" opacity="0.3"/>
+
+  <!-- TABI – large, bold, Japanese serif feel -->
+  <text
+    x="206"
+    y="72"
+    font-family="'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', 'Times New Roman', serif"
+    font-size="56"
+    font-weight="700"
+    fill="white"
+    dominant-baseline="middle"
+    letter-spacing="4"
+  >TABI</text>
+
+  <!-- Thin line separator between TABI and subtitle -->
+  <line x1="206" y1="93" x2="496" y2="93" stroke="white" stroke-width="0.8" opacity="0.25"/>
+
+  <!-- Currency Converter – spaced, light, slightly Japanese tracking -->
+  <text
+    x="208"
+    y="118"
+    font-family="'Hiragino Mincho ProN', 'Yu Mincho', 'Georgia', serif"
+    font-size="17"
+    font-weight="300"
+    fill="white"
+    dominant-baseline="middle"
+    letter-spacing="5"
+    opacity="0.75"
+  >CURRENCY CONVERTER</text>
+
+</svg>

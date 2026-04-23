@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Navy blue background with rounded corners (iOS icon style) -->
+  <rect width="512" height="512" rx="112" ry="112" fill="#1B2A4A"/>
+
+  <!-- Outer ring -->
+  <circle cx="256" cy="256" r="218" fill="none" stroke="white" stroke-width="11"/>
+
+  <!-- Torii beam -->
+  <rect x="84" y="148" width="344" height="18" rx="9" fill="white"/>
+
+  <!-- Kanji 旅 -->
+  <text
+    x="256"
+    y="328"
+    font-family="'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', 'Times New Roman', serif"
+    font-size="192"
+    font-weight="600"
+    fill="white"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >旅</text>
+
+  <!-- TABI wordmark bottom -->
+  <text
+    x="256"
+    y="444"
+    font-family="'Helvetica Neue', 'SF Pro Display', sans-serif"
+    font-size="36"
+    font-weight="700"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="14"
+    opacity="0.75"
+  >TABI</text>
+</svg>
