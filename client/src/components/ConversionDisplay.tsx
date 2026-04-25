@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useRef, useLayoutEffect } from "react";
 import { formatCurrency } from "../lib/formatter";
+import type { ForeignCurrency } from "../lib/currencies";
 
 function RollingNumber({ formatted }: { formatted: string }) {
   const prevRef = useRef<string>(formatted);
@@ -18,11 +19,7 @@ function RollingNumber({ formatted }: { formatted: string }) {
           return (
             <span
               key={i}
-              style={{
-                display:    "inline-block",
-                lineHeight: "1",
-                alignSelf:  "flex-end",
-              }}
+              style={{ display: "inline-block", lineHeight: "1", alignSelf: "flex-end" }}
             >
               {char}
             </span>
@@ -58,17 +55,20 @@ function RollingNumber({ formatted }: { formatted: string }) {
 
 interface ConversionDisplayProps {
   result:    number;
-  currency:  "EUR" | "JPY";
+  currency:  "EUR" | ForeignCurrency;
   isLoading: boolean;
   isDark:    boolean;
   children?: React.ReactNode;
+  borderAlt: string;
 }
 
-function ConversionDisplay({ result, currency, isLoading, children }: ConversionDisplayProps) {
+function ConversionDisplay({ result, currency, isLoading, children, borderAlt }: ConversionDisplayProps) {
   if (isLoading) {
     return (
       <div className="py-6 text-center">
-        <p className="text-[#9B948A] text-sm tracking-widest uppercase">Wechselkurs wird geladen...</p>
+        <p className="text-sm tracking-widest uppercase" style={{ color: "#9B948A" }}>
+          Wechselkurs wird geladen...
+        </p>
       </div>
     );
   }
@@ -85,7 +85,7 @@ function ConversionDisplay({ result, currency, isLoading, children }: Conversion
           <RollingNumber formatted={formatted} />
         </p>
       </div>
-      <div className="border-t border-[#E8E3D9] px-1 py-3">
+      <div className="px-1 py-3" style={{ borderTop: `1px solid ${borderAlt}` }}>
         {children}
       </div>
     </>
