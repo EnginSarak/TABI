@@ -291,13 +291,21 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
           <div className="w-12 flex justify-end flex-shrink-0">
             <button onClick={() => setIsListOpen(true)} className="relative p-2 text-white/60 hover:text-white transition-colors">
               <ShoppingCart className="h-6 w-6" />
-              <span
-                key={shoppingItems.length}
-                className="absolute top-0 right-0 bg-white text-[#1B2A4A] text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center"
-                style={{ animation: shoppingItems.length > 0 ? "tabi-badge-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" : "tabi-badge-out 0.2s ease-in forwards" }}
-              >
-                {shoppingItems.length > 0 ? shoppingItems.length : ""}
-              </span>
+              {shoppingItems.length > 0 && (
+                <span
+                  key={shoppingItems.length}
+                  className="absolute top-0 right-0 bg-white text-[#1B2A4A] text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center"
+                  style={{ animation: "tabi-badge-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" }}
+                >
+                  {shoppingItems.length}
+                </span>
+              )}
+
+
+
+
+
+
             </button>
           </div>
 
