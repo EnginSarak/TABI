@@ -18,13 +18,39 @@ type Direction = "eur-jpy" | "jpy-eur";
 interface CurrencyConverterProps { isDark: boolean; }
 
 const DISCOUNT_PRESETS = [0, 10, 20, 30, 50, 70];
-
 const TAX_FREE_MIN_JPY = 5500;
+
+function IOSInstallPrompt({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex flex-col items-center pb-6 px-4 pointer-events-none">
+      <div
+        className="w-full max-w-sm bg-[#1B2A4A] rounded-2xl px-5 py-4 shadow-2xl pointer-events-auto flex items-start gap-3"
+        style={{ backdropFilter: "blur(12px)" }}
+      >
+        <div className="flex-1 min-w-0">
+          <p className="text-white text-[13px] font-semibold leading-snug">
+            Add Tabi to your Home Screen
+          </p>
+          <p className="text-white/60 text-[12px] mt-1 leading-snug">
+            Tap <span className="text-white font-medium">Share</span> then <span className="text-white font-medium">"Add to Home Screen"</span> for the full app experience.
+          </p>
+        </div>
+        <button
+          onClick={onDismiss}
+          className="text-white/40 text-lg leading-none flex-shrink-0 mt-0.5 px-1"
+        >
+          ✕
+        </button>
+      </div>
+      <div className="text-white/70 text-xl mt-2 animate-bounce pointer-events-none select-none">↓</div>
+    </div>
+  );
+}
 
 function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const { language, setLanguage } = useLanguage();
 
-  const [provider,      setProvider]      = usePersistentState<Provider>("tabi-provider",      "mastercard");
+  const [provider,      setProvider]      = usePersistentState<Provider>("tabi-provider",      "visa");
   const [direction,     setDirection]     = usePersistentState<Direction>("tabi-direction",    "jpy-eur");
   const [discountPct,   setDiscountPct]   = usePersistentState<number>  ("tabi-discount",      0);
   const [taxFree,       setTaxFree]       = usePersistentState<boolean> ("tabi-taxfree",       false);
@@ -44,6 +70,8 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const [isLoading,     setIsLoading]    = useState<boolean>(true);
   const [isOffline,     setIsOffline]    = useState<boolean>(false);
   const [isListOpen,    setIsListOpen]  = useState(false);
+  const [switchPressed, setSwitchPressed] = useState(false);
+  const [showIOSPrompt, setShowIOSPrompt] = useState(false);
   const cashSectionRef = useRef<HTMLDivElement>(null);
   const cashMountedRef = useRef(false);
 
@@ -56,6 +84,16 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const [tickerKey,    setTickerKey]   = useState(0);
 
   useEffect(() => { loadExchangeRate(); }, []);
+
+  useEffect(() => {
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    const isStandalone = (window.navigator as any).standalone === true;
+    const hasShown = localStorage.getItem("tabi-ios-prompt-shown");
+    if (isIOS && !isStandalone && !hasShown) {
+      const t = setTimeout(() => setShowIOSPrompt(true), 1800);
+      return () => clearTimeout(t);
+    }
+  }, []);
 
   useEffect(() => {
     if (!cashMountedRef.current) {
@@ -91,6 +129,11 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
       setIsOffline(false);
     } else { setIsOffline(true); }
     setIsLoading(false);
+  }
+
+  function dismissIOSPrompt() {
+    localStorage.setItem("tabi-ios-prompt-shown", "1");
+    setShowIOSPrompt(false);
   }
 
   function getAdjustedRate(): number {
@@ -160,6 +203,12 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
 
   function formatJPY(n: number) {
     return n.toLocaleString("de-DE", { maximumFractionDigits: 0 }) + " \u00a5";
+  }
+
+  function handleSwitchDirection() {
+    setSwitchPressed(true);
+    setDirection(d => d === "eur-jpy" ? "jpy-eur" : "eur-jpy");
+    setTimeout(() => setSwitchPressed(false), 160);
   }
 
   const atmLink = "https://www.google.com/maps/search/ATM+Geldautomat";
@@ -436,12 +485,14 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
         </div>
 
         <button
-          onClick={() => setDirection(d => d === "eur-jpy" ? "jpy-eur" : "eur-jpy")}
-          className="w-full h-12 rounded-xl border border-[#D4CEBC] bg-white text-[#1B2A4A] font-semibold text-sm tracking-widest uppercase hover:bg-[#EDE9E1] transition-all flex items-center justify-center gap-2 select-none"
-          style={{ WebkitTapHighlightColor: "transparent" }}
-          onPointerDown={e => (e.currentTarget.style.transform = "scale(0.96)")}
-          onPointerUp={e => (e.currentTarget.style.transform = "scale(1)")}
-          onPointerLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+          onClick={handleSwitchDirection}
+          className="w-full h-12 rounded-xl border border-[#D4CEBC] text-[#1B2A4A] font-semibold text-sm tracking-widest uppercase flex items-center justify-center gap-2 select-none"
+          style={{
+            WebkitTapHighlightColor: "transparent",
+            backgroundColor: switchPressed ? "#DDD8CF" : "#FFFFFF",
+            transform: switchPressed ? "scale(0.97)" : "scale(1)",
+            transition: switchPressed ? "none" : "background-color 0.25s ease, transform 0.25s ease",
+          }}
         >
           <span style={{ display: "inline-flex", transition: "transform 0.3s ease", transform: direction === "eur-jpy" ? "rotate(0deg)" : "rotate(180deg)" }}>
             <ArrowUp className="h-4 w-4" />
@@ -585,6 +636,8 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
         taxMode="netto"
         language={language}
       />
+
+      {showIOSPrompt && <IOSInstallPrompt onDismiss={dismissIOSPrompt} />}
     </div>
   );
 }
