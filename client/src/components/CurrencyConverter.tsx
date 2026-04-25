@@ -21,12 +21,17 @@ const DISCOUNT_PRESETS = [0, 10, 20, 30, 50, 70];
 const TAX_FREE_MIN_JPY = 5500;
 
 function InstallPrompt({ onDismiss, language, platform }: { onDismiss: () => void; language: string; platform: "ios" | "android" }) {
-  const [visible, setVisible] = useState(false);
+  const [phase, setPhase] = useState<"hidden" | "in" | "out">("hidden");
 
   useEffect(() => {
-    const t = requestAnimationFrame(() => setVisible(true));
+    const t = requestAnimationFrame(() => setPhase("in"));
     return () => cancelAnimationFrame(t);
   }, []);
+
+  function handleDismiss() {
+    setPhase("out");
+    setTimeout(onDismiss, 420);
+  }
 
   const isDE = language === "de";
   const isAndroid = platform === "android";
@@ -40,14 +45,18 @@ function InstallPrompt({ onDismiss, language, platform }: { onDismiss: () => voi
       ? <>Tippe unten auf <span className="text-white font-semibold">Teilen</span> dann auf <span className="text-white font-semibold">„Zum Home-Bildschirm"</span></>
       : <>Tap <span className="text-white font-semibold">Share</span> then <span className="text-white font-semibold">"Add to Home Screen"</span></>;
 
+  const isIn  = phase === "in";
+  const easing = "cubic-bezier(0.22,1,0.36,1)";
+  const dur = "0.45s";
+
   if (isAndroid) {
     return (
       <div
         className="fixed top-0 left-0 right-0 z-50 flex flex-col items-end pt-3 pr-4 pointer-events-none"
         style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : "translateY(-24px)",
-          transition: "opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1)",
+          opacity: isIn ? 1 : 0,
+          transform: isIn ? "translateY(0)" : "translateY(-28px)",
+          transition: `opacity ${dur} ${easing}, transform ${dur} ${easing}`,
         }}
       >
         <div className="text-white/70 text-xl mb-1 pointer-events-none select-none" style={{ animation: "tabi-bounce-up 1.2s ease-in-out infinite" }}>↑</div>
@@ -59,7 +68,7 @@ function InstallPrompt({ onDismiss, language, platform }: { onDismiss: () => voi
             <p className="text-white text-[13px] font-semibold leading-snug">{title}</p>
             <p className="text-white/60 text-[12px] mt-1 leading-snug">{body}</p>
           </div>
-          <button onClick={onDismiss} className="text-white/40 text-lg leading-none flex-shrink-0 mt-0.5 px-1">✕</button>
+          <button onClick={handleDismiss} className="text-white/40 text-lg leading-none flex-shrink-0 mt-0.5 px-1">✕</button>
         </div>
       </div>
     );
@@ -70,9 +79,9 @@ function InstallPrompt({ onDismiss, language, platform }: { onDismiss: () => voi
       className="fixed bottom-0 left-0 right-0 z-50 flex flex-col px-4 pointer-events-none"
       style={{
         paddingBottom: "calc(env(safe-area-inset-bottom) + 1.25rem)",
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(32px)",
-        transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
+        opacity: isIn ? 1 : 0,
+        transform: isIn ? "translateY(0)" : "translateY(36px)",
+        transition: `opacity ${dur} ${easing}, transform ${dur} ${easing}`,
       }}
     >
       <div
@@ -83,12 +92,44 @@ function InstallPrompt({ onDismiss, language, platform }: { onDismiss: () => voi
           <p className="text-white text-[13px] font-semibold leading-snug">{title}</p>
           <p className="text-white/60 text-[12px] mt-1 leading-snug">{body}</p>
         </div>
-        <button onClick={onDismiss} className="text-white/40 text-lg leading-none flex-shrink-0 mt-0.5 px-1">✕</button>
+        <button onClick={handleDismiss} className="text-white/40 text-lg leading-none flex-shrink-0 mt-0.5 px-1">✕</button>
       </div>
       <div className="flex justify-end pr-6 mt-1.5 pointer-events-none">
         <span className="text-white/70 text-xl select-none" style={{ animation: "tabi-bounce-down 1.2s ease-in-out infinite" }}>↓</span>
       </div>
     </div>
+  );
+}
+
+function CartBadge({ count }: { count: number }) {
+  const [display, setDisplay] = useState(count);
+  const [animClass, setAnimClass] = useState("tabi-badge-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards");
+  const [show, setShow] = useState(count > 0);
+  const prevCount = useRef(count);
+
+  useEffect(() => {
+    if (count > 0) {
+      setDisplay(count);
+      setAnimClass("tabi-badge-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards");
+      setShow(true);
+    } else if (prevCount.current > 0) {
+      setAnimClass("tabi-badge-out 0.22s cubic-bezier(0.4,0,1,1) forwards");
+      const t = setTimeout(() => setShow(false), 230);
+      prevCount.current = count;
+      return () => clearTimeout(t);
+    }
+    prevCount.current = count;
+  }, [count]);
+
+  if (!show) return null;
+
+  return (
+    <span
+      className="absolute top-0 right-0 bg-white text-[#1B2A4A] text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center"
+      style={{ animation: animClass }}
+    >
+      {display}
+    </span>
   );
 }
 
@@ -291,15 +332,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
           <div className="w-12 flex justify-end flex-shrink-0">
             <button onClick={() => setIsListOpen(true)} className="relative p-2 text-white/60 hover:text-white transition-colors">
               <ShoppingCart className="h-6 w-6" />
-              {shoppingItems.length > 0 && (
-                <span
-                  key={shoppingItems.length}
-                  className="absolute top-0 right-0 bg-white text-[#1B2A4A] text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center"
-                  style={{ animation: "tabi-badge-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" }}
-                >
-                  {shoppingItems.length}
-                </span>
-              )}
+              <CartBadge count={shoppingItems.length} />
 
 
 
@@ -328,6 +361,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
           0%, 100% { transform: translateY(0); }
           50%       { transform: translateY(-5px); }
         }
+        @keyframes tabi-badge-pop {
           0%   { transform: scale(0);   opacity: 0; }
           60%  { transform: scale(1.4); opacity: 1; }
           100% { transform: scale(1);   opacity: 1; }
