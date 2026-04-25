@@ -2,6 +2,9 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import CurrencyConverter from "./components/CurrencyConverter";
+import CurrencySelectionScreen from "./components/CurrencySelectionScreen";
+import { isValidCurrency } from "./lib/currencies";
+import type { ForeignCurrency } from "./lib/currencies";
 
 function isMobileDevice(): boolean {
   const ua = navigator.userAgent;
@@ -44,22 +47,30 @@ function DesktopBlock() {
 
 function App() {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+  const [currency, setCurrency] = useState<ForeignCurrency | null>(() => {
+    const saved = localStorage.getItem("tabi-currency");
+    return isValidCurrency(saved) ? saved : null;
+  });
 
   useEffect(() => {
     setIsDesktop(!isMobileDevice());
   }, []);
 
   if (isDesktop === null) return null;
-
-  if (isDesktop) {
-    return <DesktopBlock />;
-  }
+  if (isDesktop) return <DesktopBlock />;
 
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-[#F0EDE6]">
-        <CurrencyConverter isDark={false} />
-      </div>
+      {currency === null ? (
+        <CurrencySelectionScreen onSelect={setCurrency} />
+      ) : (
+        <CurrencyConverter
+          key={currency}
+          currency={currency}
+          onCurrencyChange={setCurrency}
+          isDark={false}
+        />
+      )}
     </LanguageProvider>
   );
 }
