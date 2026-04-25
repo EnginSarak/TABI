@@ -4,6 +4,7 @@ import { formatRate } from "../lib/formatter";
 import { Input } from "./ui/input";
 import { X, Lock } from "lucide-react";
 import { getTranslation, type Language } from "../lib/translations";
+import type { CurrencyTheme } from "../lib/currencies";
 
 interface ExchangeRateDisplayProps {
   rate: number;
@@ -11,9 +12,18 @@ interface ExchangeRateDisplayProps {
   onManualRateChange: (rate: number | null) => void;
   isDark: boolean;
   language: Language;
+  foreignSymbol: string;
+  theme: CurrencyTheme;
 }
 
-function ExchangeRateDisplay({ rate, isManual, onManualRateChange, language }: ExchangeRateDisplayProps) {
+function ExchangeRateDisplay({
+  rate,
+  isManual,
+  onManualRateChange,
+  language,
+  foreignSymbol,
+  theme,
+}: ExchangeRateDisplayProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState("");
 
@@ -42,7 +52,7 @@ function ExchangeRateDisplay({ rate, isManual, onManualRateChange, language }: E
   if (isEditing) {
     return (
       <div className="flex items-center gap-2 justify-center">
-        <span className="text-[11px] text-[#6B6560] uppercase tracking-wider">
+        <span className="text-[11px] uppercase tracking-wider" style={{ color: theme.textMuted }}>
           {getTranslation(language, "rate")}: 1 € =
         </span>
         <Input
@@ -51,12 +61,25 @@ function ExchangeRateDisplay({ rate, isManual, onManualRateChange, language }: E
           value={editValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyPress}
-          className="h-7 w-20 text-xs px-2 border-[#1B2A4A] bg-white text-[#1A1A1A]"
+          className="h-7 w-20 text-xs px-2 bg-white text-[#1A1A1A]"
+          style={{ borderColor: theme.primary }}
           autoFocus
         />
-        <span className="text-[11px] text-[#6B6560]">¥</span>
-        <button onClick={handleSave} className="h-7 px-2 text-xs bg-[#1B2A4A] text-white rounded">✓</button>
-        <button onClick={handleCancel} className="h-7 px-2 text-xs text-[#6B6560] hover:text-[#1A1A1A] rounded">✕</button>
+        <span className="text-[11px]" style={{ color: theme.textMuted }}>{foreignSymbol}</span>
+        <button
+          onClick={handleSave}
+          className="h-7 px-2 text-xs text-white rounded"
+          style={{ backgroundColor: theme.primary }}
+        >
+          ✓
+        </button>
+        <button
+          onClick={handleCancel}
+          className="h-7 px-2 text-xs rounded hover:text-[#1A1A1A]"
+          style={{ color: theme.textMuted }}
+        >
+          ✕
+        </button>
       </div>
     );
   }
@@ -65,17 +88,17 @@ function ExchangeRateDisplay({ rate, isManual, onManualRateChange, language }: E
     <div className="flex items-center justify-center gap-2">
       <button
         onClick={handleEditClick}
-        className={`text-[11px] tracking-wider uppercase font-medium transition-colors cursor-pointer hover:underline ${
-          isManual ? "text-[#2D4A8A]" : "text-[#6B6560]"
-        }`}
+        className="text-[11px] tracking-wider uppercase font-medium transition-colors cursor-pointer hover:underline"
+        style={{ color: isManual ? theme.primary : theme.textMuted }}
       >
         {isManual && <Lock className="inline h-3 w-3 mr-1" />}
-        {getTranslation(language, "rate")}: 1 € = {formatRate(rate)} ¥
+        {getTranslation(language, "rate")}: 1 € = {formatRate(rate)} {foreignSymbol}
       </button>
       {isManual && (
         <button
           onClick={handleReset}
-          className="h-5 w-5 flex items-center justify-center text-[#9B948A] hover:text-[#1A1A1A] transition-colors"
+          className="h-5 w-5 flex items-center justify-center transition-colors hover:text-[#1A1A1A]"
+          style={{ color: theme.textFaint }}
           title={getTranslation(language, "resetRate")}
         >
           <X className="h-3 w-3" />
