@@ -20,29 +20,74 @@ interface CurrencyConverterProps { isDark: boolean; }
 const DISCOUNT_PRESETS = [0, 10, 20, 30, 50, 70];
 const TAX_FREE_MIN_JPY = 5500;
 
-function IOSInstallPrompt({ onDismiss }: { onDismiss: () => void }) {
-  return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex flex-col items-center pb-6 px-4 pointer-events-none">
+function InstallPrompt({ onDismiss, language, platform }: { onDismiss: () => void; language: string; platform: "ios" | "android" }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const t = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(t);
+  }, []);
+
+  const isDE = language === "de";
+  const isAndroid = platform === "android";
+
+  const title = isDE ? "Tabi zum Home-Screen hinzufügen" : "Add Tabi to your Home Screen";
+  const body = isAndroid
+    ? isDE
+      ? <>Tippe oben rechts auf <span className="text-white font-semibold">⋮</span> dann auf <span className="text-white font-semibold">„Zum Startbildschirm"</span></>
+      : <>Tap <span className="text-white font-semibold">⋮</span> top right, then <span className="text-white font-semibold">"Add to Home Screen"</span></>
+    : isDE
+      ? <>Tippe unten auf <span className="text-white font-semibold">Teilen</span> dann auf <span className="text-white font-semibold">„Zum Home-Bildschirm"</span></>
+      : <>Tap <span className="text-white font-semibold">Share</span> then <span className="text-white font-semibold">"Add to Home Screen"</span></>;
+
+  if (isAndroid) {
+    return (
       <div
-        className="w-full max-w-sm bg-[#1B2A4A] rounded-2xl px-5 py-4 shadow-2xl pointer-events-auto flex items-start gap-3"
+        className="fixed top-0 left-0 right-0 z-50 flex flex-col items-end pt-3 pr-4 pointer-events-none"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(-24px)",
+          transition: "opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1)",
+        }}
+      >
+        <div className="text-white/70 text-xl mb-1 pointer-events-none select-none" style={{ animation: "tabi-bounce-up 1.2s ease-in-out infinite" }}>↑</div>
+        <div
+          className="w-full max-w-xs bg-[#1B2A4A] rounded-2xl px-5 py-4 shadow-2xl pointer-events-auto flex items-start gap-3"
+          style={{ backdropFilter: "blur(12px)" }}
+        >
+          <div className="flex-1 min-w-0">
+            <p className="text-white text-[13px] font-semibold leading-snug">{title}</p>
+            <p className="text-white/60 text-[12px] mt-1 leading-snug">{body}</p>
+          </div>
+          <button onClick={onDismiss} className="text-white/40 text-lg leading-none flex-shrink-0 mt-0.5 px-1">✕</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="fixed bottom-0 left-0 right-0 z-50 flex flex-col px-4 pointer-events-none"
+      style={{
+        paddingBottom: "calc(env(safe-area-inset-bottom) + 1.25rem)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(32px)",
+        transition: "opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1)",
+      }}
+    >
+      <div
+        className="w-full bg-[#1B2A4A] rounded-2xl px-5 py-4 shadow-2xl pointer-events-auto flex items-start gap-3"
         style={{ backdropFilter: "blur(12px)" }}
       >
         <div className="flex-1 min-w-0">
-          <p className="text-white text-[13px] font-semibold leading-snug">
-            Add Tabi to your Home Screen
-          </p>
-          <p className="text-white/60 text-[12px] mt-1 leading-snug">
-            Tap <span className="text-white font-medium">Share</span> then <span className="text-white font-medium">"Add to Home Screen"</span> for the full app experience.
-          </p>
+          <p className="text-white text-[13px] font-semibold leading-snug">{title}</p>
+          <p className="text-white/60 text-[12px] mt-1 leading-snug">{body}</p>
         </div>
-        <button
-          onClick={onDismiss}
-          className="text-white/40 text-lg leading-none flex-shrink-0 mt-0.5 px-1"
-        >
-          ✕
-        </button>
+        <button onClick={onDismiss} className="text-white/40 text-lg leading-none flex-shrink-0 mt-0.5 px-1">✕</button>
       </div>
-      <div className="text-white/70 text-xl mt-2 animate-bounce pointer-events-none select-none">↓</div>
+      <div className="flex justify-end pr-6 mt-1.5 pointer-events-none">
+        <span className="text-white/70 text-xl select-none" style={{ animation: "tabi-bounce-down 1.2s ease-in-out infinite" }}>↓</span>
+      </div>
     </div>
   );
 }
@@ -72,6 +117,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const [isListOpen,    setIsListOpen]  = useState(false);
   const [switchPressed, setSwitchPressed] = useState(false);
   const [showIOSPrompt, setShowIOSPrompt] = useState(false);
+  const [installPlatform, setInstallPlatform] = useState<"ios" | "android">("ios");
   const cashSectionRef = useRef<HTMLDivElement>(null);
   const cashMountedRef = useRef(false);
 
@@ -86,10 +132,13 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   useEffect(() => { loadExchangeRate(); }, []);
 
   useEffect(() => {
-    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    const isStandalone = (window.navigator as any).standalone === true;
+    const ua = navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/.test(ua);
+    const isAndroid = /Android/.test(ua);
+    const isStandalone = (window.navigator as any).standalone === true || window.matchMedia("(display-mode: standalone)").matches;
     const hasShown = localStorage.getItem("tabi-ios-prompt-shown");
-    if (isIOS && !isStandalone && !hasShown) {
+    if (!isStandalone && !hasShown && (isIOS || isAndroid)) {
+      setInstallPlatform(isAndroid ? "android" : "ios");
       const t = setTimeout(() => setShowIOSPrompt(true), 1800);
       return () => clearTimeout(t);
     }
@@ -263,7 +312,14 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
         .tabi-ticker-in {
           animation: tabi-ticker-in 0.6s ease-out forwards;
         }
-        @keyframes tabi-badge-pop {
+        @keyframes tabi-bounce-down {
+          0%, 100% { transform: translateY(0); }
+          50%       { transform: translateY(5px); }
+        }
+        @keyframes tabi-bounce-up {
+          0%, 100% { transform: translateY(0); }
+          50%       { transform: translateY(-5px); }
+        }
           0%   { transform: scale(0);   opacity: 0; }
           60%  { transform: scale(1.4); opacity: 1; }
           100% { transform: scale(1);   opacity: 1; }
@@ -637,7 +693,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
         language={language}
       />
 
-      {showIOSPrompt && <IOSInstallPrompt onDismiss={dismissIOSPrompt} />}
+      {showIOSPrompt && <InstallPrompt onDismiss={dismissIOSPrompt} language={language} platform={installPlatform} />}
     </div>
   );
 }
