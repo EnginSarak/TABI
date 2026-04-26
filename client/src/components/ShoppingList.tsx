@@ -133,11 +133,11 @@ function ShoppingList({ items, isOpen, onClose, onRemoveItem, onUpdateItemName, 
   useEffect(() => {
     if (isOpen) {
       setRendered(true);
-      const t = requestAnimationFrame(() => setVisible(true));
-      return () => cancelAnimationFrame(t);
+      const t = setTimeout(() => setVisible(true), 20);
+      return () => clearTimeout(t);
     } else {
       setVisible(false);
-      const t = setTimeout(() => setRendered(false), 300);
+      const t = setTimeout(() => setRendered(false), 320);
       return () => clearTimeout(t);
     }
   }, [isOpen]);
