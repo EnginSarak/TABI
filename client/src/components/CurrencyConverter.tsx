@@ -7,6 +7,7 @@ import ExchangeRateDisplay from "./ExchangeRateDisplay";
 import ShoppingList, { type ShoppingItem } from "./ShoppingList";
 import SettingsModal from "./SettingsModal";
 import TaxFreeInfoModal from "./TaxFreeInfoModal";
+import ChfSymbol from "./ChfSymbol";
 import { fetchExchangeRate, getCachedRate } from "../lib/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useCurrency } from "../contexts/CurrencyContext";
@@ -337,7 +338,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
                   <>
                     <span className="font-semibold tracking-widest uppercase whitespace-nowrap" style={{ color: theme.textMuted, fontSize: "10px" }}>{label}</span>
                     <span className="font-medium whitespace-nowrap" style={{ color, fontSize: "10px" }}>
-                      {today.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {symbol}
+                      {today.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 4 })}{" "}{currency === "CHF" ? <ChfSymbol /> : symbol}
                     </span>
                   </>
                 );
@@ -383,7 +384,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
                 right: inputCurrency === "EUR" || !config.symbolBefore ? "1rem" : undefined,
               }}
             >
-              {inputCurrency === "EUR" ? "€" : symbol}
+              {inputCurrency === "EUR" ? "€" : (currency === "CHF" ? <ChfSymbol /> : symbol)}
             </span>
           </div>
         </div>
@@ -468,7 +469,6 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
             if (taxFreeUnavailable) {
               return (
                 <div className="w-full flex items-start gap-3 px-4 py-3" style={{ background: theme.bgInput, borderTop: `1px solid ${theme.borderLight}` }}>
-                  <span className="text-base flex-shrink-0 mt-0.5">ℹ️</span>
                   <div className="flex flex-col items-start flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: theme.textMuted }}>Tax Free</span>
@@ -617,7 +617,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
                   className="h-11 rounded-xl text-[#1A1A1A] px-4 text-lg"
                   style={{ border: `1px solid ${theme.border}`, background: theme.bgInput }}
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: theme.textSubtle }}>{symbol}</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: theme.textSubtle }}>{currency === "CHF" ? <ChfSymbol /> : symbol}</span>
               </div>
             </div>
 
