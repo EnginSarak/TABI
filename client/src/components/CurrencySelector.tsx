@@ -20,6 +20,12 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
 
   useEffect(() => { const t = requestAnimationFrame(() => setMounted(true)); return () => cancelAnimationFrame(t); }, []);
 
+  useEffect(() => {
+    const primary = CURRENCIES[selected].theme.primary;
+    document.body.style.backgroundColor = primary;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", primary);
+  }, [selected]);
+
   function handleConfirm() {
     setLeaving(true);
     setTimeout(() => setCurrency(selected), 420);
