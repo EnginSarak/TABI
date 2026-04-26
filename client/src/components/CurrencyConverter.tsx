@@ -464,9 +464,6 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
             const deductLabel = language === "de"
               ? `${vatLabel} MwSt. abziehen (Flughafen-Erstattung)`
               : `Deduct ${vatLabel} VAT (airport refund)`;
-            const minLabel = language === "de"
-              ? `Mindestbetrag: ${formatCurrency(taxFreeMin!, currency)} (2026)`
-              : `Min. amount: ${formatCurrency(taxFreeMin!, currency)} (2026)`;
 
             if (taxFreeUnavailable) {
               return (
@@ -490,6 +487,10 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
                 </div>
               );
             }
+
+            const minLabel = language === "de"
+              ? `Mindestbetrag: ${formatCurrency(taxFreeMin!, currency)} (2026)`
+              : `Min. amount: ${formatCurrency(taxFreeMin!, currency)} (2026)`;
 
             return (
               <button
