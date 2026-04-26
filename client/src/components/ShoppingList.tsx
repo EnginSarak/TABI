@@ -183,9 +183,11 @@ function ShoppingList({ items, isOpen, onClose, onRemoveItem, onUpdateItemName, 
         style={{
           top: "110px",
           maxHeight: "calc(100dvh - 130px)",
-          transform: visible ? "translateY(0) scale(1)" : "translateY(24px) scale(0.97)",
+          transform: visible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.96)",
           opacity: visible ? 1 : 0,
-          transition: "transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.25s ease",
+          transition: visible
+            ? "transform 0.44s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease"
+            : "transform 0.28s cubic-bezier(0.4,0,1,1), opacity 0.22s ease",
         }}
       >
         {showHistory ? (
