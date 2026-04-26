@@ -13,6 +13,20 @@ interface Props {
   onLanguageChange: (l: Language) => void;
 }
 
+function applyThemeColor(primary: string, primaryHover: string) {
+  document.documentElement.style.backgroundColor = primary;
+  document.body.style.backgroundColor = primaryHover;
+
+  const existing = document.querySelector('meta[name="theme-color"]');
+  if (existing) {
+    existing.remove();
+  }
+  const meta = document.createElement("meta");
+  meta.name = "theme-color";
+  meta.content = primary;
+  document.head.appendChild(meta);
+}
+
 function CurrencySelector({ language, onLanguageChange }: Props) {
   const { setCurrency } = useCurrency();
   const [selected, setSelected] = useState<ForeignCurrency>("JPY");
@@ -22,12 +36,10 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
   useEffect(() => { const t = requestAnimationFrame(() => setMounted(true)); return () => cancelAnimationFrame(t); }, []);
 
   useEffect(() => {
-    const primary = CURRENCIES[selected].theme.primary;
+    const { primary, primaryHover } = CURRENCIES[selected].theme;
     document.documentElement.style.transition = "background-color 0.5s cubic-bezier(0.4,0,0.2,1)";
-    document.documentElement.style.backgroundColor = primary;
     document.body.style.transition = "background-color 0.5s cubic-bezier(0.4,0,0.2,1)";
-    document.body.style.backgroundColor = primary;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", primary);
+    applyThemeColor(primary, primaryHover);
   }, [selected]);
 
   function handleConfirm() {
