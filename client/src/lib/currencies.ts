@@ -66,6 +66,6 @@ export const CURRENCIES: Record<ForeignCurrency, CurrencyConfig> = {
     code: "CHF", symbol: "Fr", flag: "🇨🇭",
     nameEN: "Swiss Franc", nameDE: "Schweizer Franken",
     decimals: 2,
-    theme: { primary: "#8A95A5", primaryHover: "#6E7D91", ...neutralLayout },
+    theme: { primary: "#5D6D7E", primaryHover: "#4A5664", ...neutralLayout },
   },
 };
