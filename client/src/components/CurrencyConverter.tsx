@@ -6,6 +6,7 @@ import ConversionDisplay from "./ConversionDisplay";
 import ExchangeRateDisplay from "./ExchangeRateDisplay";
 import ShoppingList, { type ShoppingItem } from "./ShoppingList";
 import SettingsModal from "./SettingsModal";
+import TaxFreeInfoModal from "./TaxFreeInfoModal";
 import { fetchExchangeRate, getCachedRate } from "../lib/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useCurrency } from "../contexts/CurrencyContext";
@@ -110,7 +111,7 @@ function InstallPrompt({ onDismiss, language, platform, primary }: { onDismiss: 
 function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const { language, setLanguage } = useLanguage();
   const { currency, config } = useCurrency();
-  const { theme, symbol, decimals, taxFreeMin } = config;
+  const { theme, symbol, decimals, taxFreeMin, taxVatRate, taxFreeUnavailable } = config;
 
   const [provider,     setProvider]     = usePersistentState<Provider>("tabi-provider", "visa");
   const [direction,    setDirection]    = usePersistentState<Direction>("tabi-direction", "foreign-eur");
@@ -131,7 +132,8 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const [isOffline,   setIsOffline]   = useState<boolean>(false);
   const [isListOpen,  setIsListOpen]  = useState(false);
   const [switchPressed, setSwitchPressed] = useState(false);
-  const [showSettings,  setShowSettings]  = useState(false);
+  const [showSettings,    setShowSettings]    = useState(false);
+  const [showTaxFreeInfo, setShowTaxFreeInfo] = useState(false);
   const [showIOSPrompt, setShowIOSPrompt] = useState(false);
   const [installPlatform, setInstallPlatform] = useState<"ios" | "android">("ios");
   const cashSectionRef = useRef<HTMLDivElement>(null);
@@ -220,7 +222,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
     if (!rate) return 0;
     const amount = effectiveInputAmount();
     const converted = direction === "eur-foreign" ? amount * rate : amount / rate;
-    return taxFree && taxFreeMin ? converted / 1.1 : converted;
+    return taxFree && taxFreeMin && taxVatRate ? converted / (1 + taxVatRate) : converted;
   }
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -457,31 +459,75 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
             </ConversionDisplay>
           </div>
 
-          {taxFreeMin && (
-            <button
-              onClick={() => { if (taxFreeEligible) setTaxFree(v => !v); }}
-              className="w-full flex items-center justify-between px-4 py-3 transition-colors"
-              style={{
-                background: !taxFreeEligible ? theme.bgInput : taxFree ? theme.primary : theme.bgCard,
-                opacity: !taxFreeEligible ? 0.6 : 1,
-                cursor: !taxFreeEligible ? "not-allowed" : "pointer",
-              }}
-            >
-              <div className="flex flex-col items-start">
-                <span className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: taxFree && taxFreeEligible ? "#fff" : theme.textMuted }}>Tax Free</span>
-                <span className="text-[10px]" style={{ color: taxFree && taxFreeEligible ? "rgba(255,255,255,0.6)" : theme.textSubtle }}>
-                  {taxFreeEligible
-                    ? (language === "de" ? "10% MwSt abziehen" : "Deduct 10% VAT")
-                    : (language === "de" ? `Mindestbetrag: ${formatCurrency(taxFreeMin, currency)} (2026)` : `Min. amount: ${formatCurrency(taxFreeMin, currency)} (2026)`)}
-                </span>
-              </div>
-              {taxFreeEligible && (
-                <div className="relative w-10 h-5 rounded-full transition-colors flex-shrink-0" style={{ background: taxFree ? "rgba(255,255,255,0.3)" : theme.border }}>
-                  <div className="absolute top-0.5 w-4 h-4 rounded-full transition-all shadow-sm" style={{ left: taxFree ? "calc(100% - 18px)" : "2px", background: taxFree ? "#fff" : theme.bgCard }} />
+          {(taxFreeMin || taxFreeUnavailable) && (() => {
+            const vatLabel = taxVatRate ? `${Math.round(taxVatRate * 100)}%` : "";
+            const deductLabel = language === "de"
+              ? `${vatLabel} MwSt. abziehen (Flughafen-Erstattung)`
+              : `Deduct ${vatLabel} VAT (airport refund)`;
+            const minLabel = language === "de"
+              ? `Mindestbetrag: ${formatCurrency(taxFreeMin!, currency)} (2026)`
+              : `Min. amount: ${formatCurrency(taxFreeMin!, currency)} (2026)`;
+
+            if (taxFreeUnavailable) {
+              return (
+                <div className="w-full flex items-start gap-3 px-4 py-3" style={{ background: theme.bgInput, borderTop: `1px solid ${theme.borderLight}` }}>
+                  <span className="text-base flex-shrink-0 mt-0.5">ℹ️</span>
+                  <div className="flex flex-col items-start flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: theme.textMuted }}>Tax Free</span>
+                      <button onClick={() => setShowTaxFreeInfo(true)} className="flex items-center justify-center" style={{ color: theme.textSubtle }}>
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.5"/>
+                          <path d="M10 9v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                          <circle cx="10" cy="6.5" r="0.75" fill="currentColor"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <span className="text-[10px] mt-0.5 leading-relaxed" style={{ color: theme.textSubtle }}>
+                      {language === "de" ? taxFreeUnavailable.de : taxFreeUnavailable.en}
+                    </span>
+                  </div>
                 </div>
-              )}
-            </button>
-          )}
+              );
+            }
+
+            return (
+              <button
+                onClick={() => { if (taxFreeEligible) setTaxFree(v => !v); }}
+                className="w-full flex items-center justify-between px-4 py-3 transition-colors"
+                style={{
+                  background: !taxFreeEligible ? theme.bgInput : taxFree ? theme.primary : theme.bgCard,
+                  opacity: !taxFreeEligible ? 0.6 : 1,
+                  cursor: !taxFreeEligible ? "not-allowed" : "pointer",
+                }}
+              >
+                <div className="flex flex-col items-start">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: taxFree && taxFreeEligible ? "#fff" : theme.textMuted }}>Tax Free</span>
+                    <button
+                      onClick={e => { e.stopPropagation(); setShowTaxFreeInfo(true); }}
+                      className="flex items-center justify-center"
+                      style={{ color: taxFree && taxFreeEligible ? "rgba(255,255,255,0.6)" : theme.textSubtle }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M10 9v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <circle cx="10" cy="6.5" r="0.75" fill="currentColor"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <span className="text-[10px]" style={{ color: taxFree && taxFreeEligible ? "rgba(255,255,255,0.6)" : theme.textSubtle }}>
+                    {taxFreeEligible ? deductLabel : minLabel}
+                  </span>
+                </div>
+                {taxFreeEligible && (
+                  <div className="relative w-10 h-5 rounded-full transition-colors flex-shrink-0" style={{ background: taxFree ? "rgba(255,255,255,0.3)" : theme.border }}>
+                    <div className="absolute top-0.5 w-4 h-4 rounded-full transition-all shadow-sm" style={{ left: taxFree ? "calc(100% - 18px)" : "2px", background: taxFree ? "#fff" : theme.bgCard }} />
+                  </div>
+                )}
+              </button>
+            );
+          })()}
         </div>
 
         <div className="flex gap-3">
@@ -638,6 +684,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
       />
 
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} language={language} onLanguageChange={setLanguage} />
+      <TaxFreeInfoModal isOpen={showTaxFreeInfo} onClose={() => setShowTaxFreeInfo(false)} language={language} />
 
       {showIOSPrompt && <InstallPrompt onDismiss={dismissIOSPrompt} language={language} platform={installPlatform} primary={theme.primary} />}
     </div>
