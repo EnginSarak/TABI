@@ -325,12 +325,11 @@ function TaxFreeInfoModal({ isOpen, onClose, language }: Props) {
           {info.sections.map((section, i) => (
             <div key={i} className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: theme.primary }} />
                 <p className="text-[12px] font-bold tracking-widest uppercase" style={{ color: theme.primary }}>
                   {section.heading}
                 </p>
               </div>
-              <p className="text-[13px] leading-relaxed pl-3.5" style={{ color: theme.textMuted }}>
+              <p className="text-[13px] leading-relaxed" style={{ color: theme.textMuted }}>
                 {section.body}
               </p>
             </div>
