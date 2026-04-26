@@ -3,23 +3,16 @@ import { CURRENCIES } from "./currencies";
 
 export function formatCurrency(amount: number, currency: "EUR" | ForeignCurrency): string {
   if (currency === "EUR") {
-    const formatted = amount.toLocaleString("de-DE", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    return `${formatted} €`;
+    return amount.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
   }
-  const config = CURRENCIES[currency];
-  const formatted = amount.toLocaleString("de-DE", {
-    minimumFractionDigits: config.decimals,
-    maximumFractionDigits: config.decimals,
-  });
-  return `${formatted} ${config.symbol}`;
+  const cfg = CURRENCIES[currency as ForeignCurrency];
+  if (!cfg) return amount.toString();
+  return amount.toLocaleString("de-DE", {
+    minimumFractionDigits: cfg.decimals,
+    maximumFractionDigits: cfg.decimals,
+  }) + " " + cfg.symbol;
 }
 
 export function formatRate(rate: number): string {
-  return rate.toLocaleString("de-DE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  return rate.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 4 });
 }
