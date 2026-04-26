@@ -46,13 +46,15 @@ function SettingsModal({ isOpen, onClose, language, onLanguageChange }: Props) {
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="absolute left-0 right-0 bottom-0 rounded-t-3xl flex flex-col overflow-hidden"
+        className="absolute left-3 right-3 bottom-0 rounded-t-3xl flex flex-col overflow-hidden"
         style={{
           background: theme.bgCard,
-          maxHeight: "88dvh",
+          maxHeight: "92dvh",
           transform: visible ? "translateY(0)" : "translateY(100%)",
-          transition: "transform 0.38s cubic-bezier(0.22,1,0.36,1)",
+          opacity: visible ? 1 : 0,
+          transition: "transform 0.42s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease",
           paddingBottom: "env(safe-area-inset-bottom)",
+          boxShadow: "0 -8px 40px rgba(0,0,0,0.18)",
         }}
       >
         <div className="flex items-center justify-between px-5 pt-5 pb-4 flex-shrink-0" style={{ borderBottom: `1px solid ${theme.borderLight}` }}>
