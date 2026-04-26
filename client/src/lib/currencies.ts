@@ -23,6 +23,8 @@ export interface CurrencyConfig {
   decimals: number;
   theme: CurrencyTheme;
   taxFreeMin?: number;
+  taxVatRate?: number;
+  taxFreeUnavailable?: { en: string; de: string };
 }
 
 const neutralLayout = {
@@ -43,29 +45,42 @@ export const CURRENCIES: Record<ForeignCurrency, CurrencyConfig> = {
     decimals: 0,
     theme: { primary: "#1B2A4A", primaryHover: "#243660", ...neutralLayout },
     taxFreeMin: 5500,
+    taxVatRate: 0.10,
   },
   USD: {
     code: "USD", symbol: "$", flag: "🇺🇸", symbolBefore: true,
     nameEN: "US Dollar", nameDE: "US-Dollar",
     decimals: 2,
     theme: { primary: "#0F2B21", primaryHover: "#184535", ...neutralLayout },
+    taxFreeUnavailable: {
+      en: "No federal VAT refund in the USA. Sales tax varies by state and is generally not refundable for tourists.",
+      de: "Kein bundesweites MwSt.-Refund in den USA. Umsatzsteuer variiert je Bundesstaat und ist für Touristen in der Regel nicht erstattungsfähig.",
+    },
   },
   GBP: {
     code: "GBP", symbol: "£", flag: "🇬🇧", symbolBefore: true,
     nameEN: "British Pound", nameDE: "Britisches Pfund",
     decimals: 2,
     theme: { primary: "#251142", primaryHover: "#35185E", ...neutralLayout },
+    taxFreeUnavailable: {
+      en: "The UK abolished its tourist VAT refund scheme in January 2021 (post-Brexit). No refunds available.",
+      de: "Das UK hat die Touristen-MwSt.-Erstattung im Januar 2021 (post-Brexit) abgeschafft. Keine Erstattung möglich.",
+    },
   },
   TRY: {
     code: "TRY", symbol: "₺", flag: "🇹🇷",
     nameEN: "Turkish Lira", nameDE: "Türkische Lira",
     decimals: 2,
     theme: { primary: "#4A0D0D", primaryHover: "#6B1212", ...neutralLayout },
+    taxFreeMin: 1200,
+    taxVatRate: 0.20,
   },
   CHF: {
     code: "CHF", symbol: "Fr", flag: "🇨🇭",
     nameEN: "Swiss Franc", nameDE: "Schweizer Franken",
     decimals: 2,
     theme: { primary: "#36414D", primaryHover: "#4B5866", ...neutralLayout },
+    taxFreeMin: 300,
+    taxVatRate: 0.081,
   },
 };
