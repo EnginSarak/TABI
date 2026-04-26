@@ -16,6 +16,7 @@ export interface CurrencyTheme {
 export interface CurrencyConfig {
   code: ForeignCurrency;
   symbol: string;
+  symbolBefore?: boolean;
   flag: string;
   nameEN: string;
   nameDE: string;
@@ -38,7 +39,7 @@ export const CURRENCIES: Record<ForeignCurrency, CurrencyConfig> = {
     taxFreeMin: 5500,
   },
   USD: {
-    code: "USD", symbol: "$", flag: "🇺🇸",
+    code: "USD", symbol: "$", flag: "🇺🇸", symbolBefore: true,
     nameEN: "US Dollar", nameDE: "US-Dollar",
     decimals: 2,
     theme: {
@@ -49,7 +50,7 @@ export const CURRENCIES: Record<ForeignCurrency, CurrencyConfig> = {
     },
   },
   GBP: {
-    code: "GBP", symbol: "£", flag: "🇬🇧",
+    code: "GBP", symbol: "£", flag: "🇬🇧", symbolBefore: true,
     nameEN: "British Pound", nameDE: "Britisches Pfund",
     decimals: 2,
     theme: {
