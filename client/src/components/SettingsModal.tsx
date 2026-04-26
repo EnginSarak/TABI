@@ -1,33 +1,24 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { X, Check } from "lucide-react";
-import { CURRENCIES, type ForeignCurrency } from "../lib/currencies";
-import { type Language, getTranslation } from "../lib/translations";
+import type { ForeignCurrency } from "../lib/currencies";
+import { CURRENCIES } from "../lib/currencies";
+import { useCurrency } from "../contexts/CurrencyContext";
+import type { Language } from "../lib/translations";
 
-const CURRENCY_ORDER: ForeignCurrency[] = ["JPY", "USD", "GBP", "TRY", "CHF"];
+const CURRENCY_LIST: ForeignCurrency[] = ["JPY", "USD", "GBP", "TRY", "CHF"];
 
-interface SettingsModalProps {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
   language: Language;
-  onLanguageChange: (lang: Language) => void;
-  currency: ForeignCurrency;
-  onCurrencyChange: (currency: ForeignCurrency) => void;
-  hasShoppingItems: boolean;
+  onLanguageChange: (l: Language) => void;
 }
 
-function SettingsModal({
-  isOpen,
-  onClose,
-  language,
-  onLanguageChange,
-  currency,
-  onCurrencyChange,
-  hasShoppingItems,
-}: SettingsModalProps) {
+function SettingsModal({ isOpen, onClose, language, onLanguageChange }: Props) {
+  const { currency, setCurrency, config } = useCurrency();
+  const { theme } = config;
   const [visible, setVisible] = useState(false);
   const [rendered, setRendered] = useState(false);
-  const [pendingCurrency, setPendingCurrency] = useState<ForeignCurrency | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -36,28 +27,10 @@ function SettingsModal({
       return () => cancelAnimationFrame(t);
     } else {
       setVisible(false);
-      setPendingCurrency(null);
       const t = setTimeout(() => setRendered(false), 320);
       return () => clearTimeout(t);
     }
   }, [isOpen]);
-
-  function handleCurrencyTap(code: ForeignCurrency) {
-    if (code === currency) return;
-    if (hasShoppingItems) {
-      setPendingCurrency(code);
-    } else {
-      commitCurrencyChange(code);
-    }
-  }
-
-  function commitCurrencyChange(code: ForeignCurrency) {
-    localStorage.setItem("tabi-currency", code);
-    onCurrencyChange(code);
-    onClose();
-  }
-
-  const t = (key: Parameters<typeof getTranslation>[1]) => getTranslation(language, key);
 
   if (!rendered) return null;
 
@@ -65,134 +38,96 @@ function SettingsModal({
     <div
       className="fixed inset-0 z-50"
       style={{
-        backgroundColor: visible ? "rgba(0,0,0,0.45)" : "rgba(0,0,0,0)",
-        backdropFilter: visible ? "blur(3px)" : "blur(0px)",
-        WebkitBackdropFilter: visible ? "blur(3px)" : "blur(0px)",
-        transition: "background-color 0.28s ease, backdrop-filter 0.28s ease",
+        backgroundColor: visible ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0)",
+        backdropFilter: visible ? "blur(4px)" : "blur(0px)",
+        WebkitBackdropFilter: visible ? "blur(4px)" : "blur(0px)",
+        transition: "background-color 0.25s ease, backdrop-filter 0.25s ease",
       }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="absolute left-0 right-0 bottom-0 bg-white rounded-t-3xl shadow-2xl overflow-hidden"
+        className="absolute left-0 right-0 bottom-0 rounded-t-3xl flex flex-col overflow-hidden"
         style={{
+          background: theme.bgCard,
+          maxHeight: "88dvh",
           transform: visible ? "translateY(0)" : "translateY(100%)",
-          transition: "transform 0.35s cubic-bezier(0.32,0.72,0,1)",
+          transition: "transform 0.38s cubic-bezier(0.22,1,0.36,1)",
           paddingBottom: "env(safe-area-inset-bottom)",
-          maxHeight: "85dvh",
-          overflowY: "auto",
         }}
       >
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full bg-[#D4CEBC]" />
-        </div>
-
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E3D9]">
-          <h2 className="text-base font-bold tracking-wide text-[#1A1A1A]">
-            {t("settings")}
+        <div className="flex items-center justify-between px-5 pt-5 pb-4 flex-shrink-0" style={{ borderBottom: `1px solid ${theme.borderLight}` }}>
+          <h2 className="text-[15px] font-semibold tracking-wide text-[#1A1A1A]">
+            {language === "de" ? "Einstellungen" : "Settings"}
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 text-[#9B948A] hover:text-[#1A1A1A] transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded-full transition-colors"
+            style={{ background: theme.bgAccent, color: theme.textSubtle }}
           >
-            <X className="h-5 w-5" />
+            <span className="text-[13px]">✕</span>
           </button>
         </div>
 
-        <div className="px-5 py-5 space-y-6">
+        <div className="flex-1 overflow-y-auto px-5 py-5 space-y-7">
           <div className="space-y-3">
-            <label className="block text-[11px] font-semibold tracking-widest uppercase text-[#6B6560]">
-              {t("language")}
-            </label>
-            <div className="flex gap-2">
-              {(["en", "de"] as Language[]).map((lang) => (
+            <p className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: theme.textMuted }}>
+              {language === "de" ? "Sprache" : "Language"}
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              {(["en", "de"] as Language[]).map(lang => (
                 <button
                   key={lang}
                   onClick={() => onLanguageChange(lang)}
-                  className="flex-1 h-11 rounded-xl font-bold text-sm tracking-widest uppercase border-2 transition-all"
+                  className="h-12 rounded-xl font-semibold text-sm transition-all active:scale-95 flex items-center justify-center gap-2"
                   style={{
-                    backgroundColor: language === lang ? "#1A1A1A" : "white",
-                    borderColor: language === lang ? "#1A1A1A" : "#D4CEBC",
-                    color: language === lang ? "white" : "#6B6560",
+                    background: language === lang ? theme.primary : theme.bgInput,
+                    color: language === lang ? "#fff" : theme.textMuted,
+                    border: `1.5px solid ${language === lang ? theme.primary : theme.border}`,
                   }}
                 >
-                  {lang.toUpperCase()}
+                  <span>{lang === "en" ? "🇬🇧" : "🇩🇪"}</span>
+                  <span>{lang === "en" ? "English" : "Deutsch"}</span>
                 </button>
               ))}
             </div>
           </div>
 
           <div className="space-y-3">
-            <label className="block text-[11px] font-semibold tracking-widest uppercase text-[#6B6560]">
-              {t("currency")}
-            </label>
-            <div className="grid grid-cols-1 gap-2">
-              {CURRENCY_ORDER.map((code) => {
-                const cfg = CURRENCIES[code];
+            <p className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: theme.textMuted }}>
+              {language === "de" ? "Reisewährung" : "Travel Currency"}
+            </p>
+            <div className="flex flex-col gap-2">
+              {CURRENCY_LIST.map(code => {
+                const c = CURRENCIES[code];
                 const isActive = currency === code;
                 return (
                   <button
                     key={code}
-                    onClick={() => handleCurrencyTap(code)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all"
+                    onClick={() => { setCurrency(code); onClose(); }}
+                    className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-left transition-all active:scale-[0.98]"
                     style={{
-                      backgroundColor: isActive ? cfg.theme.primary : "white",
-                      borderColor: isActive ? cfg.theme.primary : "#D4CEBC",
+                      background: isActive ? theme.primary : theme.bgInput,
+                      border: `1.5px solid ${isActive ? theme.primary : theme.border}`,
                     }}
                   >
-                    <span className="text-2xl">{cfg.flag}</span>
-                    <div className="flex-1 text-left">
-                      <span
-                        className="font-bold text-sm tracking-widest"
-                        style={{ color: isActive ? "white" : "#1A1A1A" }}
-                      >
-                        {code}
-                      </span>
-                      <span
-                        className="block text-[11px] tracking-wide mt-0.5"
-                        style={{ color: isActive ? "rgba(255,255,255,0.65)" : "#9B948A" }}
-                      >
-                        {language === "de" ? cfg.nameDE : cfg.name}
-                      </span>
+                    <span className="text-[26px] select-none leading-none">{c.flag}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-[14px] leading-tight" style={{ color: isActive ? "#fff" : "#1A1A1A" }}>
+                        {language === "de" ? c.nameDE : c.nameEN}
+                      </p>
+                      <p className="text-[11px] mt-0.5 tracking-wide" style={{ color: isActive ? "rgba(255,255,255,0.55)" : theme.textSubtle }}>
+                        {c.code} · {c.symbol}
+                      </p>
                     </div>
-                    {isActive && <Check className="h-4 w-4 text-white flex-shrink-0" />}
+                    {isActive && (
+                      <span className="text-white/70 text-base flex-shrink-0">✓</span>
+                    )}
                   </button>
                 );
               })}
             </div>
           </div>
         </div>
-
-        {pendingCurrency && (
-          <div
-            className="mx-5 mb-5 rounded-2xl border-2 p-4 space-y-3"
-            style={{
-              backgroundColor: CURRENCIES[pendingCurrency].theme.bg,
-              borderColor: CURRENCIES[pendingCurrency].theme.border,
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-xl">{CURRENCIES[pendingCurrency].flag}</span>
-              <p className="text-sm font-semibold text-[#1A1A1A]">
-                {t("currencyChangeWarning")}
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setPendingCurrency(null)}
-                className="flex-1 h-10 rounded-xl text-xs font-semibold border border-[#D4CEBC] text-[#6B6560]"
-              >
-                {t("cancel")}
-              </button>
-              <button
-                onClick={() => commitCurrencyChange(pendingCurrency)}
-                className="flex-1 h-10 rounded-xl text-xs font-bold text-white"
-                style={{ backgroundColor: CURRENCIES[pendingCurrency].theme.primary }}
-              >
-                {t("confirm")}
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
