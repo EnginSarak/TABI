@@ -23,11 +23,11 @@ function SettingsModal({ isOpen, onClose, language, onLanguageChange }: Props) {
   useEffect(() => {
     if (isOpen) {
       setRendered(true);
-      const t = requestAnimationFrame(() => setVisible(true));
-      return () => cancelAnimationFrame(t);
+      const t = setTimeout(() => setVisible(true), 20);
+      return () => clearTimeout(t);
     } else {
       setVisible(false);
-      const t = setTimeout(() => setRendered(false), 320);
+      const t = setTimeout(() => setRendered(false), 380);
       return () => clearTimeout(t);
     }
   }, [isOpen]);
@@ -46,15 +46,17 @@ function SettingsModal({ isOpen, onClose, language, onLanguageChange }: Props) {
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="absolute left-3 right-3 bottom-0 rounded-t-3xl flex flex-col overflow-hidden"
+        className="absolute left-4 right-4 rounded-3xl flex flex-col overflow-hidden"
         style={{
           background: theme.bgCard,
-          maxHeight: "92dvh",
-          transform: visible ? "translateY(0)" : "translateY(100%)",
+          maxHeight: "88dvh",
+          top: "50%",
+          transform: visible ? "translateY(-50%) scale(1)" : "translateY(-44%) scale(0.94)",
           opacity: visible ? 1 : 0,
-          transition: "transform 0.42s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease",
-          paddingBottom: "env(safe-area-inset-bottom)",
-          boxShadow: "0 -8px 40px rgba(0,0,0,0.18)",
+          transition: visible
+            ? "transform 0.44s cubic-bezier(0.22,1,0.36,1), opacity 0.28s ease"
+            : "transform 0.3s cubic-bezier(0.4,0,1,1), opacity 0.22s ease",
+          boxShadow: "0 12px 60px rgba(0,0,0,0.22)",
         }}
       >
         <div className="flex items-center justify-between px-5 pt-5 pb-4 flex-shrink-0" style={{ borderBottom: `1px solid ${theme.borderLight}` }}>
