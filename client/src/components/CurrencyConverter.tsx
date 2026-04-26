@@ -315,8 +315,9 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
         @keyframes tabi-badge-out { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
         @keyframes tabi-bounce-down { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
         @keyframes tabi-bounce-up   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; }
         input[type=range] { -webkit-appearance: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; background: ${theme.primary}; }
+        input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: none; background: ${theme.primary}; }
       `}</style>
 
       <div className="flex items-center justify-between px-4 py-1.5" style={{ background: theme.bgAccent, borderBottom: `1px solid ${theme.border}` }}>
