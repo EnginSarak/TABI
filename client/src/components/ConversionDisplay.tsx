@@ -3,6 +3,7 @@ import { useRef, useLayoutEffect } from "react";
 import { formatCurrency } from "../lib/formatter";
 import type { ForeignCurrency } from "../lib/currencies";
 import { useCurrency } from "../contexts/CurrencyContext";
+import ChfSymbol from "./ChfSymbol";
 
 function RollingNumber({ formatted }: { formatted: string }) {
   const prevRef = useRef<string>(formatted);
@@ -52,7 +53,11 @@ function ConversionDisplay({ result, currency, isLoading, children }: Conversion
     );
   }
 
-  const formatted = formatCurrency(result, currency);
+  const isCHF = currency === "CHF";
+
+  const formatted = isCHF
+    ? result.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : formatCurrency(result, currency);
 
   return (
     <>
@@ -61,7 +66,21 @@ function ConversionDisplay({ result, currency, isLoading, children }: Conversion
           className="font-light tracking-tight text-[#1A1A1A]"
           style={{ fontSize: "clamp(2.8rem, 12vw, 4rem)", lineHeight: "1" }}
         >
-          <RollingNumber formatted={formatted} />
+          <span style={{ display: "inline-flex", alignItems: "baseline", gap: "0.12em" }}>
+            <RollingNumber formatted={formatted} />
+            {isCHF && (
+              <ChfSymbol
+                style={{
+                  width: "0.58em",
+                  height: "0.88em",
+                  verticalAlign: "baseline",
+                  flexShrink: 0,
+                  alignSelf: "flex-end",
+                  marginBottom: "0.06em",
+                }}
+              />
+            )}
+          </span>
         </p>
       </div>
       <div className="px-1 py-3" style={{ borderTop: `1px solid ${theme.borderLight}` }}>
