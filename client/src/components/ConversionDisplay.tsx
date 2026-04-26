@@ -2,6 +2,7 @@ import * as React from "react";
 import { useRef, useLayoutEffect } from "react";
 import { formatCurrency } from "../lib/formatter";
 import type { ForeignCurrency } from "../lib/currencies";
+import { useCurrency } from "../contexts/CurrencyContext";
 
 function RollingNumber({ formatted }: { formatted: string }) {
   const prevRef = useRef<string>(formatted);
@@ -14,35 +15,14 @@ function RollingNumber({ formatted }: { formatted: string }) {
         const prevChar = prev[i] ?? char;
         const isDigit  = /\d/.test(char);
         const changed  = isDigit && char !== prevChar;
-
         if (!isDigit) {
-          return (
-            <span
-              key={i}
-              style={{ display: "inline-block", lineHeight: "1", alignSelf: "flex-end" }}
-            >
-              {char}
-            </span>
-          );
+          return <span key={i} style={{ display: "inline-block", lineHeight: "1", alignSelf: "flex-end" }}>{char}</span>;
         }
-
         return (
-          <span
-            key={i}
-            style={{
-              display:       "inline-block",
-              overflow:      "hidden",
-              height:        "1em",
-              lineHeight:    "1",
-              verticalAlign: "bottom",
-            }}
-          >
+          <span key={i} style={{ display: "inline-block", overflow: "hidden", height: "1em", lineHeight: "1", verticalAlign: "bottom" }}>
             <span
               key={changed ? `${i}-${char}-${formatted}` : `${i}-${char}`}
-              style={{
-                display:   "block",
-                animation: changed ? "rollIn 0.22s cubic-bezier(0.2,0,0,1) both" : "none",
-              }}
+              style={{ display: "block", animation: changed ? "rollIn 0.22s cubic-bezier(0.2,0,0,1) both" : "none" }}
             >
               {char}
             </span>
@@ -59,16 +39,15 @@ interface ConversionDisplayProps {
   isLoading: boolean;
   isDark:    boolean;
   children?: React.ReactNode;
-  borderAlt: string;
 }
 
-function ConversionDisplay({ result, currency, isLoading, children, borderAlt }: ConversionDisplayProps) {
+function ConversionDisplay({ result, currency, isLoading, children }: ConversionDisplayProps) {
+  const { theme } = useCurrency().config;
+
   if (isLoading) {
     return (
       <div className="py-6 text-center">
-        <p className="text-sm tracking-widest uppercase" style={{ color: "#9B948A" }}>
-          Wechselkurs wird geladen...
-        </p>
+        <p className="text-sm tracking-widest uppercase" style={{ color: theme.textSubtle }}>Loading...</p>
       </div>
     );
   }
@@ -85,7 +64,7 @@ function ConversionDisplay({ result, currency, isLoading, children, borderAlt }:
           <RollingNumber formatted={formatted} />
         </p>
       </div>
-      <div className="px-1 py-3" style={{ borderTop: `1px solid ${borderAlt}` }}>
+      <div className="px-1 py-3" style={{ borderTop: `1px solid ${theme.borderLight}` }}>
         {children}
       </div>
     </>
