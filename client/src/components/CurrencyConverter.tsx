@@ -101,7 +101,7 @@ function InstallPrompt({ onDismiss, language, platform, primary }: { onDismiss: 
         <button onClick={handleDismiss} className="text-white/40 text-lg leading-none flex-shrink-0 mt-0.5 px-1">✕</button>
       </div>
       <div className="flex justify-end pr-6 mt-1.5 pointer-events-none">
-        <span className="text-white/70 text-xl select-none" style={{ animation: "tabi-bounce-down 1.2s ease-in-out infinite" }}>↓</span>
+        <span className="text-xl select-none" style={{ color: primary, opacity: 0.8, animation: "tabi-bounce-down 1.2s ease-in-out infinite" }}>↓</span>
       </div>
     </div>
   );
@@ -364,11 +364,22 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
             <Input
               type="text" inputMode="decimal" value={inputValue} onChange={handleInputChange}
               placeholder={isIntegerMode ? "0" : "0,00"}
-              className="text-3xl h-14 rounded-xl bg-white text-[#1A1A1A] placeholder:text-[#C5BFB3] transition-all px-4"
-              style={{ border: `1px solid ${theme.border}` }}
+              className="text-3xl h-14 rounded-xl bg-white text-[#1A1A1A] placeholder:text-[#C5BFB3] transition-all"
+              style={{
+                border: `1px solid ${theme.border}`,
+                paddingLeft: inputCurrency !== "EUR" && config.symbolBefore ? "2.5rem" : "1rem",
+                paddingRight: inputCurrency === "EUR" || !config.symbolBefore ? "2.5rem" : "1rem",
+              }}
               disabled={isLoading}
             />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg font-medium" style={{ color: theme.textSubtle }}>
+            <span
+              className="absolute top-1/2 -translate-y-1/2 text-lg font-medium"
+              style={{
+                color: theme.textSubtle,
+                left: inputCurrency !== "EUR" && config.symbolBefore ? "1rem" : undefined,
+                right: inputCurrency === "EUR" || !config.symbolBefore ? "1rem" : undefined,
+              }}
+            >
               {inputCurrency === "EUR" ? "€" : symbol}
             </span>
           </div>
@@ -405,7 +416,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
                     borderColor: discountPct === pct ? theme.primary : theme.border,
                   }}
                 >
-                  {pct === 50 ? "半額 50%" : pct === 0 ? (language === "de" ? "Kein Rabatt" : "No discount") : `-${pct}%`}
+                  {pct === 0 ? (language === "de" ? "Kein Rabatt" : "No discount") : pct === 50 && currency === "JPY" ? "半額 50%" : `-${pct}%`}
                 </button>
               ))}
             </div>
