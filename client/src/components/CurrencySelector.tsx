@@ -4,6 +4,7 @@ import type { ForeignCurrency } from "../lib/currencies";
 import { CURRENCIES } from "../lib/currencies";
 import { useCurrency } from "../contexts/CurrencyContext";
 import type { Language } from "../lib/translations";
+import ChfSymbol from "./ChfSymbol";
 
 const CURRENCY_LIST: ForeignCurrency[] = ["JPY", "USD", "GBP", "TRY", "CHF"];
 
@@ -22,6 +23,9 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
 
   useEffect(() => {
     const primary = CURRENCIES[selected].theme.primary;
+    document.documentElement.style.transition = "background-color 0.5s cubic-bezier(0.4,0,0.2,1)";
+    document.documentElement.style.backgroundColor = primary;
+    document.body.style.transition = "background-color 0.5s cubic-bezier(0.4,0,0.2,1)";
     document.body.style.backgroundColor = primary;
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", primary);
   }, [selected]);
@@ -77,7 +81,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
                   <p className="text-white font-semibold text-[14px] leading-tight">
                     {language === "de" ? c.nameDE : c.nameEN}
                   </p>
-                  <p className="text-white/45 text-[11px] mt-0.5 tracking-wide">{c.code} · {c.symbol}</p>
+                  <p className="text-white/45 text-[11px] mt-0.5 tracking-wide">{c.code} · {c.code === "CHF" ? <ChfSymbol /> : c.symbol}</p>
                 </div>
                 <div
                   className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center"
