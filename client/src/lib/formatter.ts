@@ -7,10 +7,11 @@ export function formatCurrency(amount: number, currency: "EUR" | ForeignCurrency
   }
   const cfg = CURRENCIES[currency as ForeignCurrency];
   if (!cfg) return amount.toString();
-  return amount.toLocaleString("de-DE", {
+  const num = amount.toLocaleString("de-DE", {
     minimumFractionDigits: cfg.decimals,
     maximumFractionDigits: cfg.decimals,
-  }) + " " + cfg.symbol;
+  });
+  return cfg.symbolBefore ? cfg.symbol + num : num + " " + cfg.symbol;
 }
 
 export function formatRate(rate: number): string {
