@@ -104,7 +104,7 @@ function DesktopBlock() {
                 Best experienced on mobile
               </h1>
               <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
-                Open Tabi on your iPhone or Android for the full experience — built for on-the-go currency conversion while travelling.
+                Open TABI on your iPhone or Android for the full experience — built for on-the-go currency conversion while travelling.
               </p>
             </div>
           </div>
