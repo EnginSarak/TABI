@@ -115,7 +115,7 @@ const SlideToUnlock = ({ language, onConfirm, theme }: { language: Language; onC
           className="absolute inset-x-0 text-center text-[11px] tracking-[0.28em] uppercase font-light pointer-events-none tabi-shimmer"
           style={{ opacity: isUnlocked ? 0 : 1 - progress * 1.4, transition: "opacity 0.15s ease" }}
         >
-          {language === "de" ? "Ziehen zum Reisen" : "Slide to Journey"}
+          {language === "de" ? "WISCHEN" : "SLIDE"}
         </span>
 
         <div
@@ -249,7 +249,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
             <img
               src="/tabi-logo-horizontal.svg"
               alt="Tabi"
-              className="h-11 mx-auto"
+              className="h-15 mx-auto"
               style={{ filter: "brightness(0) invert(1) opacity(0.9)" }}
               draggable={false}
             />
