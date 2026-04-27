@@ -48,7 +48,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
     blinkTimeout.current = setTimeout(() => {
       setDisplayedTheme(CURRENCIES[code].theme);
       setBgVisible(true);
-    }, 250); // Sanfter Übergang beim Wechsel
+    }, 250); // Beibehalten: Sanfter Übergang
   }
 
   function handleConfirm() {
@@ -64,18 +64,19 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
       <div
         className="absolute inset-0"
         style={{
-          // Kräftigerer Gradient: Startet bei 0% (satt), geht bis 120% (weit über den Rand für Weichheit)
-          background: `radial-gradient(circle at 50% 50%, ${theme.primary} 0%, ${theme.primaryHover} 40%, #000 120%)`,
-          opacity: bgVisible ? 1 : 0,
+          // FIX: Linearer Verlauf statt Radial. Erzeugt eine weiche "Lichtwand" ohne Ring-Effekt.
+          // Wir nutzen 40% bis 60% als Kernbereich für maximale Farbkraft ohne "Punkt".
+          background: `linear-gradient(to bottom, #000 0%, ${theme.primary} 40%, ${theme.primary} 60%, #000 100%)`,
+          opacity: bgVisible ? 0.8 : 0, // Leicht reduziert für mehr Tiefe
           transition: bgVisible ? "opacity 0.6s ease" : "opacity 0.3s ease",
         }}
       />
 
-      {/* Grain Overlay gegen Color Banding */}
+      {/* Grain Overlay: Etwas verstärkt, um Farbstufen (Banding) komplett zu eliminieren */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          opacity: 0.03,
+          opacity: 0.04, 
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
           mixBlendMode: "overlay",
           zIndex: 1,
