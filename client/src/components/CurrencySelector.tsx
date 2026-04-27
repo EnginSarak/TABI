@@ -20,7 +20,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
   const [displayedTheme, setDisplayedTheme] = useState(CURRENCIES["JPY"].theme);
   const [mounted, setMounted] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const [blinking, setBlinking] = useState(false);
+  const [bgVisible, setBgVisible] = useState(true);
   const blinkTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -43,12 +43,12 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
     if (code === selected) return;
     if (blinkTimeout.current) clearTimeout(blinkTimeout.current);
 
-    setBlinking(true);
+    setSelected(code);
+    setBgVisible(false);
     blinkTimeout.current = setTimeout(() => {
-      setSelected(code);
       setDisplayedTheme(CURRENCIES[code].theme);
-      blinkTimeout.current = setTimeout(() => setBlinking(false), 30);
-    }, 60);
+      setBgVisible(true);
+    }, 80);
   }
 
   function handleConfirm() {
@@ -57,15 +57,16 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
   }
 
   const theme = displayedTheme;
-  const contentOpacity = blinking ? 0 : (mounted && !leaving ? 1 : 0);
 
   return (
     <div className="fixed inset-0 z-[100]" style={{ background: "#000" }}>
+
       <div
         className="absolute inset-0"
         style={{
           background: `radial-gradient(ellipse at 50% 55%, ${theme.primary} 0%, ${theme.primaryHover} 55%, #000 100%)`,
-          transition: "background 0.55s cubic-bezier(0.4,0,0.2,1)",
+          opacity: bgVisible ? 1 : 0,
+          transition: bgVisible ? "opacity 0.18s ease" : "opacity 0.07s ease",
         }}
       />
 
@@ -89,13 +90,11 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
       <div
         className="absolute inset-0 flex flex-col items-center justify-center px-6"
         style={{
-          opacity: contentOpacity,
+          opacity: mounted && !leaving ? 1 : 0,
           transform: leaving ? "scale(1.05)" : "scale(1)",
-          transition: blinking
-            ? "opacity 0.06s ease"
-            : leaving
-              ? "opacity 0.42s ease, transform 0.42s ease"
-              : "opacity 0.22s ease, transform 0.42s ease",
+          transition: leaving
+            ? "opacity 0.42s ease, transform 0.42s ease"
+            : "opacity 0.4s ease",
           zIndex: 3,
           paddingTop: "env(safe-area-inset-top)",
           paddingBottom: "env(safe-area-inset-bottom)",
@@ -127,9 +126,9 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
                   style={{
                     background: isActive ? "rgba(255,255,255,0.17)" : "rgba(255,255,255,0.06)",
                     border: `1.5px solid ${isActive ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.10)"}`,
-                    transform: mounted && !blinking ? (isActive ? "scale(1.015)" : "scale(1)") : "scale(1)",
-                    transition: "all 0.2s cubic-bezier(0.34,1.2,0.64,1)",
-                    transitionDelay: mounted ? "0s" : `${i * 0.06}s`,
+                    transform: mounted ? (isActive ? "scale(1.015)" : "scale(1)") : "translateY(20px)",
+                    opacity: mounted ? 1 : 0,
+                    transition: `all 0.2s cubic-bezier(0.34,1.2,0.64,1), opacity 0.35s ease ${i * 0.06}s, transform 0.35s ease ${i * 0.06}s`,
                   }}
                 >
                   <FlagIcon code={code} size={36} />
