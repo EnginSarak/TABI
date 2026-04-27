@@ -279,16 +279,25 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   return (
     <div className="flex flex-col min-h-screen" style={{ background: theme.bg }}>
 
-      <div style={{ background: theme.primary, paddingTop: "env(safe-area-inset-top)" }} className="flex-shrink-0 z-50 shadow-md relative overflow-hidden">
+      <div style={{ background: theme.primary }} className="flex-shrink-0 z-50 shadow-md relative">
         <div
           className="absolute inset-x-0 top-0 pointer-events-none"
           style={{
-            height: "calc(env(safe-area-inset-top, 44px) + 48px)",
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 100%)",
-            zIndex: 10,
+            height: "env(safe-area-inset-top, 44px)",
+            background: "#000",
+            zIndex: 1,
           }}
         />
-        <div className="flex items-center justify-between px-4 h-20">
+        <div
+          className="absolute inset-x-0 pointer-events-none"
+          style={{
+            top: "env(safe-area-inset-top, 44px)",
+            height: "56px",
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 100%)",
+            zIndex: 1,
+          }}
+        />
+        <div className="flex items-center justify-between px-4 h-20 relative" style={{ paddingTop: "env(safe-area-inset-top)", zIndex: 2 }}>
 
           <div className="w-12 flex-shrink-0">
             <button
