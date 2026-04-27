@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;">
+    <path d="M512,112L512,400C512,461.814 461.814,512 400,512L112,512C50.186,512 0,461.814 0,400L0,112C0,50.186 50.186,0 112,0L400,0C461.814,0 512,50.186 512,112Z" style="fill:url(#_Linear1);"/>
+    <circle cx="256" cy="256" r="192" style="fill:none;stroke:white;stroke-width:11px;"/>
+    <g transform="matrix(1,0,0,1,256,331.7)">
+        <text x="-100px" y="0px" style="font-family:'HiraMinProN-W6', 'Hiragino Mincho ProN', serif;font-weight:600;font-size:200px;fill:white;">旅</text>
+    </g>
+    <defs>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(4.47545e-14,730.897,-730.897,4.47545e-14,256,17.1933)"><stop offset="0" style="stop-color:rgb(27,42,74);stop-opacity:1"/><stop offset="1" style="stop-color:black;stop-opacity:1"/></linearGradient>
+    </defs>
+</svg>
