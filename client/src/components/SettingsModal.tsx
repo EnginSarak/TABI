@@ -6,6 +6,7 @@ import { useCurrency } from "../contexts/CurrencyContext";
 import type { Language } from "../lib/translations";
 import FlagIcon from "./FlagIcon";
 
+
 const CURRENCY_LIST: ForeignCurrency[] = ["JPY", "USD", "GBP", "TRY", "CHF"];
 
 interface Props {
@@ -83,14 +84,13 @@ function SettingsModal({ isOpen, onClose, language, onLanguageChange }: Props) {
                 <button
                   key={lang}
                   onClick={() => onLanguageChange(lang)}
-                  className="h-12 rounded-xl font-semibold text-sm transition-all active:scale-95 flex items-center justify-center gap-2.5"
+                  className="h-12 rounded-xl font-semibold text-sm transition-all active:scale-95 flex items-center justify-center"
                   style={{
                     background: language === lang ? theme.primary : theme.bgInput,
                     color: language === lang ? "#fff" : theme.textMuted,
                     border: `1.5px solid ${language === lang ? theme.primary : theme.border}`,
                   }}
                 >
-                  <FlagIcon code={lang === "en" ? "EN" : "DE"} size={24} />
                   <span>{lang === "en" ? "English" : "Deutsch"}</span>
                 </button>
               ))}
