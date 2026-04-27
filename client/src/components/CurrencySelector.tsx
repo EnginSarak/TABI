@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import type { ForeignCurrency } from "../lib/currencies";
 import { CURRENCIES } from "../lib/currencies";
 import { useCurrency } from "../contexts/CurrencyContext";
@@ -13,6 +13,141 @@ interface Props {
   language: Language;
   onLanguageChange: (l: Language) => void;
 }
+
+// Slide to Unlock Komponente (iPhone Style)
+const SlideToUnlock = ({ language, onConfirm, theme }: { language: Language; onConfirm: () => void; theme: any }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const handleRef = useRef<HTMLDivElement>(null);
+  const [handlePosition, setHandlePosition] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const startX = useRef(0);
+  const maxTrackWidth = useRef(0);
+
+  const themePrimary = theme.primary;
+  const themeDarkBg = "#111111"; 
+  const themeText = "#FFFFFF";
+
+  const updateMaxTrackWidth = useCallback(() => {
+    if (containerRef.current && handleRef.current) {
+      maxTrackWidth.current = containerRef.current.offsetWidth - handleRef.current.offsetWidth - 10;
+    }
+  }, []);
+
+  useEffect(() => {
+    updateMaxTrackWidth();
+    window.addEventListener("resize", updateMaxTrackWidth);
+    return () => window.removeEventListener("resize", updateMaxTrackWidth);
+  }, [updateMaxTrackWidth]);
+
+  const onStart = useCallback((e: TouchEvent | MouseEvent) => {
+    if (isUnlocked) return;
+    setIsDragging(true);
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    startX.current = clientX - handlePosition;
+    if (handleRef.current) {
+      handleRef.current.style.transition = 'none';
+    }
+  }, [handlePosition, isUnlocked]);
+
+  const onMove = useCallback((e: TouchEvent | MouseEvent) => {
+    if (!isDragging) return;
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const newPosition = clientX - startX.current;
+    const clampedPosition = Math.max(0, Math.min(newPosition, maxTrackWidth.current));
+    setHandlePosition(clampedPosition);
+  }, [isDragging]);
+
+  const onEnd = useCallback(() => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    if (handlePosition > maxTrackWidth.current * 0.9) {
+      setIsUnlocked(true);
+      onConfirm();
+    } else {
+      setHandlePosition(0);
+      if (handleRef.current) {
+        handleRef.current.style.transition = 'left 0.3s ease-out';
+      }
+    }
+  }, [isDragging, handlePosition, onConfirm]);
+
+  useEffect(() => {
+    const handle = handleRef.current;
+    if (handle) {
+      handle.addEventListener("touchstart", onStart);
+      handle.addEventListener("mousedown", onStart);
+    }
+    window.addEventListener("touchmove", onMove);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("touchend", onEnd);
+    window.addEventListener("mouseup", onEnd);
+
+    return () => {
+      if (handle) {
+        handle.removeEventListener("touchstart", onStart);
+        handle.removeEventListener("mousedown", onStart);
+      }
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("touchend", onEnd);
+      window.removeEventListener("mouseup", onEnd);
+    };
+  }, [onStart, onMove, onEnd]);
+
+  return (
+    <div className="w-full max-w-sm px-6">
+      <div
+        ref={containerRef}
+        className="w-full h-16 rounded-3xl p-1 relative flex items-center overflow-hidden border-[1.5px]"
+        style={{
+          background: themeDarkBg,
+          borderColor: `rgba(255,255,255,0.06)`,
+        }}
+      >
+        <p
+          className="absolute inset-x-0 text-center font-semibold text-[15px] tracking-wide pointer-events-none tabi-text-shimmer"
+          style={{
+            color: isUnlocked ? "rgba(255,255,255,0.2)" : themeText,
+            transition: "color 0.2s ease",
+          }}
+        >
+          {language === "de" ? "Schieben zum Starten →" : "Slide to Get Started →"}
+        </p>
+        
+        <style>
+          {`
+            @keyframes tabiTextShimmer {
+              0% { background-position: -200px 0; }
+              100% { background-position: 200px 0; }
+            }
+            .tabi-text-shimmer {
+              background: linear-gradient(to right, rgba(255,255,255,0.2) 0%, ${themePrimary} 50%, rgba(255,255,255,0.2) 100%);
+              background-size: 200px 100%;
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              animation: tabiTextShimmer 2.5s infinite linear;
+            }
+          `}
+        </style>
+
+        <div
+          ref={handleRef}
+          className="w-14 h-14 rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing absolute left-1"
+          style={{
+            background: isUnlocked ? themePrimary : `rgba(255,255,255,0.1)`,
+            left: `${handlePosition + 4}px`,
+            transition: isDragging ? 'none' : 'left 0.3s ease-out',
+            borderColor: `rgba(255,255,255,0.1)`,
+            borderWidth: '1.5px',
+          }}
+        >
+          <div className="text-white text-lg font-black">{">"}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 function CurrencySelector({ language, onLanguageChange }: Props) {
   const { setCurrency } = useCurrency();
@@ -48,13 +183,13 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
     blinkTimeout.current = setTimeout(() => {
       setDisplayedTheme(CURRENCIES[code].theme);
       setBgVisible(true);
-    }, 250); // Beibehalten: Sanfter Übergang
+    }, 250);
   }
 
-  function handleConfirm() {
+  const handleConfirm = useCallback(() => {
     setLeaving(true);
     setTimeout(() => setCurrency(selected), 420);
-  }
+  }, [setCurrency, selected]);
 
   const theme = displayedTheme;
 
@@ -64,15 +199,12 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
       <div
         className="absolute inset-0"
         style={{
-          // FIX: Linearer Verlauf statt Radial. Erzeugt eine weiche "Lichtwand" ohne Ring-Effekt.
-          // Wir nutzen 40% bis 60% als Kernbereich für maximale Farbkraft ohne "Punkt".
           background: `linear-gradient(to bottom, #000 0%, ${theme.primary} 40%, ${theme.primary} 60%, #000 100%)`,
-          opacity: bgVisible ? 0.8 : 0, // Leicht reduziert für mehr Tiefe
+          opacity: bgVisible ? 0.8 : 0,
           transition: bgVisible ? "opacity 0.6s ease" : "opacity 0.3s ease",
         }}
       />
 
-      {/* Grain Overlay: Etwas verstärkt, um Farbstufen (Banding) komplett zu eliminieren */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -113,12 +245,12 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
           paddingBottom: "env(safe-area-inset-bottom)",
         }}
       >
-        <div className="w-full max-w-sm flex flex-col gap-6">
+        <div className="w-full max-w-sm flex flex-col gap-6 items-center">
           <div className="text-center space-y-3">
             <img
               src="/tabi-logo-horizontal.svg"
               alt="Tabi"
-              className="h-9 mx-auto"
+              className="h-11 mx-auto"
               style={{ filter: "brightness(0) invert(1) opacity(0.9)" }}
               draggable={false}
             />
@@ -127,7 +259,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
             </p>
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-2.5 w-full">
             {CURRENCY_LIST.map((code, i) => {
               const c = CURRENCIES[code];
               const isActive = selected === code;
@@ -135,7 +267,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
                 <button
                   key={code}
                   onClick={() => handleSelect(code)}
-                  className="flex items-center gap-4 px-5 py-3.5 rounded-2xl text-left"
+                  className="flex items-center gap-4 px-5 py-3.5 rounded-2xl text-left w-full"
                   style={{
                     background: isActive ? "rgba(255,255,255,0.17)" : "rgba(255,255,255,0.06)",
                     border: `1.5px solid ${isActive ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.10)"}`,
@@ -169,15 +301,9 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
             })}
           </div>
 
-          <div className="space-y-3">
-            <button
-              onClick={handleConfirm}
-              className="w-full h-14 rounded-2xl font-bold text-[15px] tracking-wide active:scale-95 transition-all"
-              style={{ background: "rgba(255,255,255,0.95)", color: theme.primary }}
-            >
-              {language === "de" ? "Los geht's →" : "Get Started →"}
-            </button>
+          <SlideToUnlock language={language} onConfirm={handleConfirm} theme={theme} />
 
+          <div className="space-y-3 w-full">
             <div className="flex gap-2 justify-center">
               {(["en", "de"] as Language[]).map(lang => (
                 <button
