@@ -48,7 +48,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
     blinkTimeout.current = setTimeout(() => {
       setDisplayedTheme(CURRENCIES[code].theme);
       setBgVisible(true);
-    }, 250); // Sanfterer Wechsel (Dunkelphase)
+    }, 250); // Sanfter Übergang beim Wechsel
   }
 
   function handleConfirm() {
@@ -64,15 +64,14 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
       <div
         className="absolute inset-0"
         style={{
-          // Der Gradient ist jetzt ein riesiger Kreis, der weit über die Ränder hinausgeht
-          // Das entfernt den "Ring"-Effekt und macht die Farbe absolut smooth
-          background: `radial-gradient(circle at 50% 50%, ${theme.primary} -100%, #000 100%)`,
+          // Kräftigerer Gradient: Startet bei 0% (satt), geht bis 120% (weit über den Rand für Weichheit)
+          background: `radial-gradient(circle at 50% 50%, ${theme.primary} 0%, ${theme.primaryHover} 40%, #000 120%)`,
           opacity: bgVisible ? 1 : 0,
           transition: bgVisible ? "opacity 0.6s ease" : "opacity 0.3s ease",
         }}
       />
 
-      {/* Grain Overlay für perfekte Farbübergänge ohne Ringbildung */}
+      {/* Grain Overlay gegen Color Banding */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
