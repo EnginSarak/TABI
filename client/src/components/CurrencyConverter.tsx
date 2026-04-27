@@ -283,7 +283,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
         <div
           className="absolute inset-x-0 top-0 pointer-events-none"
           style={{
-            height: "env(safe-area-inset-top, 44px)",
+            height: "calc(env(safe-area-inset-top, 44px) + 48px)",
             background: "linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 100%)",
             zIndex: 10,
           }}
