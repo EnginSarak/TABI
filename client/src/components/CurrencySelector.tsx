@@ -47,8 +47,8 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
     blinkTimeout.current = setTimeout(() => {
       setSelected(code);
       setDisplayedTheme(CURRENCIES[code].theme);
-      blinkTimeout.current = setTimeout(() => setBlinking(false), 60);
-    }, 130);
+      blinkTimeout.current = setTimeout(() => setBlinking(false), 30);
+    }, 60);
   }
 
   function handleConfirm() {
@@ -92,7 +92,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
           opacity: contentOpacity,
           transform: leaving ? "scale(1.05)" : "scale(1)",
           transition: blinking
-            ? "opacity 0.13s ease"
+            ? "opacity 0.06s ease"
             : leaving
               ? "opacity 0.42s ease, transform 0.42s ease"
               : "opacity 0.22s ease, transform 0.42s ease",
