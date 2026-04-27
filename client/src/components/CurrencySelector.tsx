@@ -48,7 +48,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
     blinkTimeout.current = setTimeout(() => {
       setDisplayedTheme(CURRENCIES[code].theme);
       setBgVisible(true);
-    }, 250); // Verlangsamter Wechsel für sanfteren Übergang
+    }, 80);
   }
 
   function handleConfirm() {
@@ -64,22 +64,9 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
       <div
         className="absolute inset-0"
         style={{
-          // Optimierter Gradient mit Zwischenstopp gegen Banding
-          background: `radial-gradient(ellipse at 50% 55%, ${theme.primary} 0%, ${theme.primaryHover} 30%, rgba(0,0,0,0.4) 70%, #000 100%)`,
+          background: `radial-gradient(ellipse at 50% 55%, ${theme.primary} 0%, ${theme.primaryHover} 55%, #000 100%)`,
           opacity: bgVisible ? 1 : 0,
-          // Sanftere Transition-Zeiten
           transition: bgVisible ? "opacity 0.6s ease" : "opacity 0.3s ease",
-        }}
-      />
-
-      {/* Grain Overlay gegen Color Banding (Ringe) */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          opacity: 0.03,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          mixBlendMode: "overlay",
-          zIndex: 1,
         }}
       />
 
