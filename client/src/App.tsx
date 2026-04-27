@@ -15,51 +15,105 @@ function isMobileDevice(): boolean {
 }
 
 function DesktopBlock() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { const t = requestAnimationFrame(() => setMounted(true)); return () => cancelAnimationFrame(t); }, []);
+
+  const primary = "#3D6B5E";
+
   return (
-    <div className="min-h-screen bg-[#F0EDE6] flex flex-col items-center justify-center px-8">
+    <div className="fixed inset-0" style={{ background: "#000" }}>
       <style>{`
-        @keyframes tabi-desktop-fade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .tabi-desktop-fade { animation: tabi-desktop-fade 0.55s cubic-bezier(0.22,1,0.36,1) both; }
-        .tabi-desktop-fade-delay { animation: tabi-desktop-fade 0.55s cubic-bezier(0.22,1,0.36,1) 0.1s both; }
+        @keyframes tabi-d-pulse {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 0.85; transform: scale(1.05); }
+        }
       `}</style>
-      <div className="text-center w-full max-w-[380px] space-y-8">
-        <div className="tabi-desktop-fade">
+
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(to bottom, #000 0%, " + primary + " 40%, " + primary + " 60%, #000 100%)",
+          opacity: mounted ? 0.75 : 0,
+          transition: "opacity 0.8s ease",
+        }}
+      />
+
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          opacity: 0.04,
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",
+          mixBlendMode: "overlay",
+        }}
+      />
+
+      <div
+        className="absolute inset-x-0 top-0 pointer-events-none"
+        style={{ height: "22%", background: "linear-gradient(to bottom, #000 0%, transparent 100%)" }}
+      />
+      <div
+        className="absolute inset-x-0 bottom-0 pointer-events-none"
+        style={{ height: "22%", background: "linear-gradient(to top, #000 0%, transparent 100%)" }}
+      />
+
+      <div
+        className="absolute inset-0 flex flex-col items-center justify-center px-6"
+        style={{
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? "translateY(0)" : "translateY(20px)",
+          transition: "opacity 0.5s ease, transform 0.5s cubic-bezier(0.22,1,0.36,1)",
+        }}
+      >
+        <div className="w-full max-w-sm flex flex-col gap-8 items-center">
+
           <img
             src="/tabi-logo-horizontal.svg"
             alt="Tabi"
-            className="mx-auto"
-            style={{ height: "52px", width: "auto", opacity: 0.92 }}
+            style={{ height: "52px", width: "auto", filter: "brightness(0) invert(1) opacity(0.9)" }}
             draggable={false}
           />
-        </div>
-        <div className="tabi-desktop-fade-delay bg-white rounded-2xl border border-[#D4CEBC] px-8 py-9 shadow-sm space-y-6">
-          <div className="flex justify-center">
+
+          <div
+            className="w-full rounded-2xl px-7 py-8 flex flex-col items-center gap-5 text-center"
+            style={{
+              background: "rgba(255,255,255,0.07)",
+              border: "1.5px solid rgba(255,255,255,0.12)",
+              backdropFilter: "blur(12px)",
+            }}
+          >
             <div
               className="rounded-2xl flex items-center justify-center"
-              style={{ width: 64, height: 64, background: "#F0EDE6", border: "1.5px solid #D4CEBC" }}
+              style={{
+                width: 64,
+                height: 64,
+                background: "rgba(255,255,255,0.08)",
+                border: "1.5px solid rgba(255,255,255,0.15)",
+                animation: "tabi-d-pulse 3s ease-in-out infinite",
+              }}
             >
-              <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="7" y="1.5" width="16" height="27" rx="3.5" stroke="#3D6B5E" strokeWidth="1.6"/>
-                <rect x="12" y="4" width="6" height="1.5" rx="0.75" fill="#3D6B5E" opacity="0.4"/>
-                <circle cx="15" cy="25.5" r="1.2" fill="#3D6B5E" opacity="0.5"/>
-                <path d="M11 12.5h3.2M11 15.5h8M11 18.5h5.5" stroke="#3D6B5E" strokeWidth="1.3" strokeLinecap="round"/>
+              <svg width="28" height="28" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="7" y="1.5" width="16" height="27" rx="3.5" stroke="rgba(255,255,255,0.85)" strokeWidth="1.6"/>
+                <rect x="12" y="4" width="6" height="1.5" rx="0.75" fill="rgba(255,255,255,0.4)"/>
+                <circle cx="15" cy="25.5" r="1.2" fill="rgba(255,255,255,0.45)"/>
+                <path d="M11 12.5h3.2M11 15.5h8M11 18.5h5.5" stroke="rgba(255,255,255,0.7)" strokeWidth="1.3" strokeLinecap="round"/>
               </svg>
             </div>
+
+            <div className="space-y-2">
+              <h1 className="font-semibold text-[17px] tracking-wide text-white">
+                Best experienced on mobile
+              </h1>
+              <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
+                Open Tabi on your iPhone or Android for the full experience — built for on-the-go currency conversion while travelling.
+              </p>
+            </div>
           </div>
-          <div className="space-y-2.5">
-            <h1 className="font-bold text-[18px] tracking-wide" style={{ color: "#1B2A4A" }}>
-              Best experienced on mobile
-            </h1>
-            <p className="text-[13.5px] leading-relaxed" style={{ color: "#6B6560" }}>
-              For the full Tabi experience, open this page on your iPhone or Android device — optimised for on-the-go currency conversion while travelling.
-            </p>
-          </div>
-          <div className="rounded-xl px-4 py-3 space-y-1" style={{ background: "#F7F4EE", border: "1px solid #E8E3D9" }}>
-            <p className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: "#A09890" }}>Open on your phone</p>
-            <p className="text-[12px] font-medium" style={{ color: "#3D6B5E" }}>tabi-currency-converter.vercel.app</p>
-          </div>
+
+          <p className="text-[10px] tracking-[0.2em] uppercase" style={{ color: "rgba(255,255,255,0.2)" }}>
+            © Tabi Currency Converter
+          </p>
+
         </div>
-        <p className="text-[10px] tracking-widest uppercase" style={{ color: "#C5BFB3" }}>© Tabi Currency Converter</p>
       </div>
     </div>
   );
