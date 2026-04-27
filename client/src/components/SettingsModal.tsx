@@ -4,6 +4,7 @@ import type { ForeignCurrency } from "../lib/currencies";
 import { CURRENCIES } from "../lib/currencies";
 import { useCurrency } from "../contexts/CurrencyContext";
 import type { Language } from "../lib/translations";
+import FlagIcon from "./FlagIcon";
 
 const CURRENCY_LIST: ForeignCurrency[] = ["JPY", "USD", "GBP", "TRY", "CHF"];
 
@@ -82,14 +83,14 @@ function SettingsModal({ isOpen, onClose, language, onLanguageChange }: Props) {
                 <button
                   key={lang}
                   onClick={() => onLanguageChange(lang)}
-                  className="h-12 rounded-xl font-semibold text-sm transition-all active:scale-95 flex items-center justify-center gap-2"
+                  className="h-12 rounded-xl font-semibold text-sm transition-all active:scale-95 flex items-center justify-center gap-2.5"
                   style={{
                     background: language === lang ? theme.primary : theme.bgInput,
                     color: language === lang ? "#fff" : theme.textMuted,
                     border: `1.5px solid ${language === lang ? theme.primary : theme.border}`,
                   }}
                 >
-                  <span>{lang === "en" ? "🇬🇧" : "🇩🇪"}</span>
+                  <FlagIcon code={lang === "en" ? "EN" : "DE"} size={24} />
                   <span>{lang === "en" ? "English" : "Deutsch"}</span>
                 </button>
               ))}
@@ -114,7 +115,7 @@ function SettingsModal({ isOpen, onClose, language, onLanguageChange }: Props) {
                       border: `1.5px solid ${isActive ? theme.primary : theme.border}`,
                     }}
                   >
-                    <span className="text-[26px] select-none leading-none">{c.flag}</span>
+                    <FlagIcon code={code} size={32} />
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-[14px] leading-tight" style={{ color: isActive ? "#fff" : "#1A1A1A" }}>
                         {language === "de" ? c.nameDE : c.nameEN}
