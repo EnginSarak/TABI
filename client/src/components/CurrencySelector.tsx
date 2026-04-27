@@ -5,6 +5,7 @@ import { CURRENCIES } from "../lib/currencies";
 import { useCurrency } from "../contexts/CurrencyContext";
 import type { Language } from "../lib/translations";
 import ChfSymbol from "./ChfSymbol";
+import FlagIcon from "./FlagIcon";
 
 const CURRENCY_LIST: ForeignCurrency[] = ["JPY", "USD", "GBP", "TRY", "CHF"];
 
@@ -16,11 +17,8 @@ interface Props {
 function applyThemeColor(primary: string, primaryHover: string) {
   document.documentElement.style.backgroundColor = primary;
   document.body.style.backgroundColor = primaryHover;
-
   const existing = document.querySelector('meta[name="theme-color"]');
-  if (existing) {
-    existing.remove();
-  }
+  if (existing) existing.remove();
   const meta = document.createElement("meta");
   meta.name = "theme-color";
   meta.content = primary;
@@ -88,12 +86,14 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
                   transition: `all 0.2s cubic-bezier(0.34,1.2,0.64,1), opacity 0.35s ease ${i * 0.06}s, transform 0.35s ease ${i * 0.06}s`,
                 }}
               >
-                <span className="text-[28px] select-none leading-none">{c.flag}</span>
+                <FlagIcon code={code} size={36} />
                 <div className="flex-1 min-w-0">
                   <p className="text-white font-semibold text-[14px] leading-tight">
                     {language === "de" ? c.nameDE : c.nameEN}
                   </p>
-                  <p className="text-white/45 text-[11px] mt-0.5 tracking-wide">{c.code} · {c.code === "CHF" ? <ChfSymbol /> : c.symbol}</p>
+                  <p className="text-white/45 text-[11px] mt-0.5 tracking-wide">
+                    {c.code} · {c.code === "CHF" ? <ChfSymbol /> : c.symbol}
+                  </p>
                 </div>
                 <div
                   className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center"
