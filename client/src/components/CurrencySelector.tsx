@@ -14,7 +14,6 @@ interface Props {
   onLanguageChange: (l: Language) => void;
 }
 
-// Slide to Unlock Komponente (iPhone Style)
 const SlideToUnlock = ({ language, onConfirm, theme }: { language: Language; onConfirm: () => void; theme: any }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
@@ -24,13 +23,9 @@ const SlideToUnlock = ({ language, onConfirm, theme }: { language: Language; onC
   const startX = useRef(0);
   const maxTrackWidth = useRef(0);
 
-  const themePrimary = theme.primary;
-  const themeDarkBg = "#111111"; 
-  const themeText = "#FFFFFF";
-
   const updateMaxTrackWidth = useCallback(() => {
     if (containerRef.current && handleRef.current) {
-      maxTrackWidth.current = containerRef.current.offsetWidth - handleRef.current.offsetWidth - 10;
+      maxTrackWidth.current = containerRef.current.offsetWidth - handleRef.current.offsetWidth - 8;
     }
   }, []);
 
@@ -45,17 +40,14 @@ const SlideToUnlock = ({ language, onConfirm, theme }: { language: Language; onC
     setIsDragging(true);
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     startX.current = clientX - handlePosition;
-    if (handleRef.current) {
-      handleRef.current.style.transition = 'none';
-    }
+    if (handleRef.current) handleRef.current.style.transition = 'none';
   }, [handlePosition, isUnlocked]);
 
   const onMove = useCallback((e: TouchEvent | MouseEvent) => {
     if (!isDragging) return;
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const newPosition = clientX - startX.current;
-    const clampedPosition = Math.max(0, Math.min(newPosition, maxTrackWidth.current));
-    setHandlePosition(clampedPosition);
+    const newPosition = Math.max(0, Math.min(clientX - startX.current, maxTrackWidth.current));
+    setHandlePosition(newPosition);
   }, [isDragging]);
 
   const onEnd = useCallback(() => {
@@ -66,23 +58,20 @@ const SlideToUnlock = ({ language, onConfirm, theme }: { language: Language; onC
       onConfirm();
     } else {
       setHandlePosition(0);
-      if (handleRef.current) {
-        handleRef.current.style.transition = 'left 0.3s ease-out';
-      }
+      if (handleRef.current) handleRef.current.style.transition = 'left 0.35s cubic-bezier(0.34,1.2,0.64,1)';
     }
   }, [isDragging, handlePosition, onConfirm]);
 
   useEffect(() => {
     const handle = handleRef.current;
     if (handle) {
-      handle.addEventListener("touchstart", onStart);
+      handle.addEventListener("touchstart", onStart, { passive: true });
       handle.addEventListener("mousedown", onStart);
     }
-    window.addEventListener("touchmove", onMove);
+    window.addEventListener("touchmove", onMove, { passive: true });
     window.addEventListener("mousemove", onMove);
     window.addEventListener("touchend", onEnd);
     window.addEventListener("mouseup", onEnd);
-
     return () => {
       if (handle) {
         handle.removeEventListener("touchstart", onStart);
@@ -95,54 +84,64 @@ const SlideToUnlock = ({ language, onConfirm, theme }: { language: Language; onC
     };
   }, [onStart, onMove, onEnd]);
 
+  const progress = maxTrackWidth.current > 0 ? handlePosition / maxTrackWidth.current : 0;
+
   return (
-    <div className="w-full max-w-sm px-6">
+    <div className="w-full max-w-sm">
+      <style>{`
+        @keyframes tabiShimmer {
+          0% { background-position: -300px 0; }
+          100% { background-position: 300px 0; }
+        }
+        .tabi-shimmer {
+          background: linear-gradient(90deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.18) 100%);
+          background-size: 300px 100%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: tabiShimmer 2.8s infinite linear;
+        }
+      `}</style>
+
       <div
         ref={containerRef}
-        className="w-full h-16 rounded-3xl p-1 relative flex items-center overflow-hidden border-[1.5px]"
+        className="w-full h-16 rounded-2xl p-1 relative flex items-center overflow-hidden"
         style={{
-          background: themeDarkBg,
-          borderColor: `rgba(255,255,255,0.06)`,
+          background: "rgba(255,255,255,0.06)",
+          border: "1.5px solid rgba(255,255,255,0.10)",
         }}
       >
-        <p
-          className="absolute inset-x-0 text-center font-semibold text-[15px] tracking-wide pointer-events-none tabi-text-shimmer"
-          style={{
-            color: isUnlocked ? "rgba(255,255,255,0.2)" : themeText,
-            transition: "color 0.2s ease",
-          }}
+        <span
+          className="absolute inset-x-0 text-center text-[11px] tracking-[0.28em] uppercase font-light pointer-events-none tabi-shimmer"
+          style={{ opacity: isUnlocked ? 0 : 1 - progress * 1.4, transition: "opacity 0.15s ease" }}
         >
-          {language === "de" ? "Schieben zum Starten →" : "Slide to Get Started →"}
-        </p>
-        
-        <style>
-          {`
-            @keyframes tabiTextShimmer {
-              0% { background-position: -200px 0; }
-              100% { background-position: 200px 0; }
-            }
-            .tabi-text-shimmer {
-              background: linear-gradient(to right, rgba(255,255,255,0.2) 0%, ${themePrimary} 50%, rgba(255,255,255,0.2) 100%);
-              background-size: 200px 100%;
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              animation: tabiTextShimmer 2.5s infinite linear;
-            }
-          `}
-        </style>
+          {language === "de" ? "Ziehen zum Reisen" : "Slide to Journey"}
+        </span>
 
         <div
           ref={handleRef}
-          className="w-14 h-14 rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing absolute left-1"
+          className="absolute flex items-center justify-center cursor-grab active:cursor-grabbing"
           style={{
-            background: isUnlocked ? themePrimary : `rgba(255,255,255,0.1)`,
             left: `${handlePosition + 4}px`,
-            transition: isDragging ? 'none' : 'left 0.3s ease-out',
-            borderColor: `rgba(255,255,255,0.1)`,
-            borderWidth: '1.5px',
+            width: "calc(33% - 4px)",
+            height: "calc(100% - 8px)",
+            borderRadius: "10px",
+            background: isUnlocked ? theme.primary : "rgba(255,255,255,0.13)",
+            border: "1.5px solid rgba(255,255,255,0.22)",
+            transition: isDragging ? "none" : "left 0.35s cubic-bezier(0.34,1.2,0.64,1), background 0.3s ease",
+            backdropFilter: "blur(8px)",
           }}
         >
-          <div className="text-white text-lg font-black">{">"}</div>
+          <svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M1 7H19M19 7L13.5 1.5M19 7L13.5 12.5"
+              stroke="white"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.9"
+            />
+          </svg>
         </div>
       </div>
     </div>
