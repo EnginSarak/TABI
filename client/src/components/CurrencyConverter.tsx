@@ -149,17 +149,6 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const [tickerKey,   setTickerKey]   = useState(0);
 
   useEffect(() => {
-    document.documentElement.style.backgroundColor = "#000";
-    document.body.style.backgroundColor = "#000";
-    const existing = document.querySelector('meta[name="theme-color"]');
-    if (existing) existing.remove();
-    const meta = document.createElement("meta");
-    meta.name = "theme-color";
-    meta.content = "#000000";
-    document.head.appendChild(meta);
-  }, []);
-
-  useEffect(() => {
     setInputValue("");
     setManualRate(lsGet(`tabi-manual-rate-${currency}`, null));
     setCashBudget(lsGet(`tabi-cash-budget-${currency}`, ""));
