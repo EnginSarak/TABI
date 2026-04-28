@@ -260,7 +260,6 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   function handleSwitchDirection() {
     setSwitchPressed(true);
     setDirection(d => d === "eur-foreign" ? "foreign-eur" : "eur-foreign");
-    setInputValue("");
     setTimeout(() => setSwitchPressed(false), 160);
   }
 
@@ -279,7 +278,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   return (
     <div className="flex flex-col min-h-screen" style={{ background: theme.bg }}>
 
-      <div style={{ background: `linear-gradient(to bottom, #000 0%, ${theme.primary} 36px)`, paddingTop: "env(safe-area-inset-top)" }} className="flex-shrink-0 z-50 shadow-md relative overflow-hidden">
+      <div style={{ background: `linear-gradient(to bottom, #000 0%, ${theme.primary} 36px)`, paddingTop: "env(safe-area-inset-top)" }} className="flex-shrink-0 z-50 shadow-md relative">
         <div
           className="absolute inset-x-0 top-0 pointer-events-none"
           style={{
