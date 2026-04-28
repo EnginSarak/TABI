@@ -23,7 +23,8 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   function applyTheme(c: ForeignCurrency) {
     const primary = CURRENCIES[c].theme.primary;
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", primary);
-    document.body.style.backgroundColor = primary;
+    document.documentElement.style.backgroundColor = "#000";
+    document.body.style.backgroundColor = "#000";
   }
 
   useEffect(() => {
