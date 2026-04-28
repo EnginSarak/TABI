@@ -67,7 +67,7 @@ function InstallPrompt({ onDismiss, language, platform, primary }: { onDismiss: 
   const easing = "cubic-bezier(0.22,1,0.36,1)";
   const dur = "0.45s";
 
-  const title = isDE ? "Tabi zum Home-Screen hinzufügen" : "Add Tabi to your Home Screen";
+  const title = isDE ? "TABI zum Home-Screen hinzufügen" : "Add TABI to your Home Screen";
   const body = isAndroid
     ? isDE
       ? <><span style={{ color: "rgba(255,255,255,0.6)" }}>Tippe oben rechts auf </span><span style={{ color: "#fff", fontWeight: 600 }}>⋮</span><span style={{ color: "rgba(255,255,255,0.6)" }}> dann auf </span><span style={{ color: "#fff", fontWeight: 600 }}>„Zum Startbildschirm"</span></>
@@ -302,7 +302,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
 
           <div className="flex-1 flex justify-center items-center h-full px-2">
             <img
-              src="/tabi-logo-horizontal.svg" alt="Tabi Currency Converter"
+              src="/tabi-logo-horizontal.svg" alt="TABI Currency Converter"
               className="h-full max-h-[60px] w-auto object-contain select-none"
               style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))" }}
               draggable={false}
