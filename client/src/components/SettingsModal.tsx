@@ -5,6 +5,7 @@ import { CURRENCIES } from "../lib/currencies";
 import { useCurrency } from "../contexts/CurrencyContext";
 import type { Language } from "../lib/translations";
 import FlagIcon from "./FlagIcon";
+import ChfSymbol from "./ChfSymbol";
 
 
 const CURRENCY_LIST: ForeignCurrency[] = ["JPY", "USD", "GBP", "TRY", "CHF"];
@@ -121,7 +122,7 @@ function SettingsModal({ isOpen, onClose, language, onLanguageChange }: Props) {
                         {language === "de" ? c.nameDE : c.nameEN}
                       </p>
                       <p className="text-[11px] mt-0.5 tracking-wide" style={{ color: isActive ? "rgba(255,255,255,0.55)" : theme.textSubtle }}>
-                        {c.code} · {c.symbol}
+                        {c.code} · {code === "CHF" ? <ChfSymbol style={{ color: isActive ? "rgba(255,255,255,0.55)" : theme.textSubtle }} /> : c.symbol}
                       </p>
                     </div>
                     {isActive && (
