@@ -2,7 +2,7 @@ export type Language = "en" | "de";
 
 export const translations = {
   en: {
-    appTitle: "Tabi Currency Converter",
+    appTitle: "TABI Currency Converter",
     updated: "Updated",
     loading: "Loading...",
     cardProvider: "Card Type",
@@ -31,7 +31,7 @@ export const translations = {
     findAtm: "Find ATM",
   },
   de: {
-    appTitle: "Tabi Currency Converter",
+    appTitle: "TABI Currency Converter",
     updated: "Aktualisiert",
     loading: "Lädt...",
     cardProvider: "Karten-Anbieter",

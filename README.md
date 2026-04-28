@@ -1,4 +1,4 @@
-# tabi
+# TABI
 
 EUR ↔ JPY currency converter. Uses real card network rates instead of the mid-market rate, has a shopping list so you can track a basket of items, and a cash budget tracker.
 
@@ -6,7 +6,7 @@ EUR ↔ JPY currency converter. Uses real card network rates instead of the mid-
 
 ## The rate problem
 
-Every card network applies its own markup on top of the mid-market rate. Showing you the ECB rate is useless if you're paying with a Visa. Tabi calculates what you'll actually see on your statement:
+Every card network applies its own markup on top of the mid-market rate. Showing you the ECB rate is useless if you're paying with a Visa. TABI calculates what you'll actually see on your statement:
 
 | Provider | Markup |
 |---|---|
@@ -26,7 +26,7 @@ Rates are fetched from [open.er-api.com](https://open.er-api.com) once a day and
 
 **Discount presets** — 10 / 20 / 30 / 半額 50% / 70%, plus a custom slider. Japan loves a sale.
 
-**Tax-free mode** — Purchases over ¥5,500 qualify for the airport VAT refund. Toggle it on and Tabi removes the 10% from the result.
+**Tax-free mode** — Purchases over ¥5,500 qualify for the airport VAT refund. Toggle it on and TABI removes the 10% from the result.
 
 **Manual rate override** — Lock in your own rate if you want. Useful if you already exchanged cash somewhere.
 

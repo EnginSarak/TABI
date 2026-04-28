@@ -68,7 +68,7 @@ function DesktopBlock() {
 
           <img
             src="/tabi-logo-horizontal.svg"
-            alt="Tabi"
+            alt="TABI"
             style={{ height: "52px", width: "auto", filter: "brightness(0) invert(1) opacity(0.9)" }}
             draggable={false}
           />
@@ -110,7 +110,7 @@ function DesktopBlock() {
           </div>
 
           <p className="text-[10px] tracking-[0.2em] uppercase" style={{ color: "rgba(255,255,255,0.2)" }}>
-            © Tabi Currency Converter
+            © TABI Currency Converter
           </p>
 
         </div>
