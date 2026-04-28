@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html, body {
-  background-color: #1B2A4A;
+  background-color: #000;
   transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
