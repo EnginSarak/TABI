@@ -15,5 +15,5 @@ export function formatCurrency(amount: number, currency: "EUR" | ForeignCurrency
 }
 
 export function formatRate(rate: number): string {
-  return rate.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+  return rate.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
