@@ -6,7 +6,7 @@
 
 **Currency Converter for Travellers** · v0.1.0
 
-*Real card rates. Shopping list. Cash budget tracker. Tax-free calculator. Offline-ready. Installable as an app.*
+*Real card rates. Shopping list. Cash budget tracker. Tax-free calculator. Installable as an app.*
 
 *By [Engin Sarak](https://github.com/EnginSarak)*
 
