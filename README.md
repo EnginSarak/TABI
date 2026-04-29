@@ -4,7 +4,7 @@
 
 **TABI Currency Converter** · v0.1.0
 
-*Real card rates. Shopping list. Cash budget tracker. Tax-free calculator. Installable as an app.*
+*Real card rates. Shopping list. Cash budget tracker. Tax-free calculator. Made for travellers.*
 
 *By [Engin Sarak](https://github.com/EnginSarak)*
 
