@@ -171,6 +171,4 @@ TABI-main/
 
 <div align="center">
 
-*By [Engin Sarak](https://github.com/EnginSarak)*
-
 </div>
