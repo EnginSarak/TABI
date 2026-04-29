@@ -33,7 +33,6 @@
   - [Tax-Free Mode](#tax-free-mode)
   - [Shopping List](#shopping-list)
   - [Cash Budget Tracker](#cash-budget-tracker)
-  - [Offline Support](#offline-support)
   - [PWA — Installable](#pwa--installable)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
@@ -63,13 +62,13 @@ No account required. No ads. No backend beyond a daily rate fetch from a free pu
 
 EUR is always the home currency. Conversion works in both directions — switch with one tap, and the amount stays in the field.
 
-| Flag | Currency | Code | Tax-Free |
-|---|---|---|---|
-| 🇯🇵 | Japanese Yen | JPY | ✅ above ¥5,500 (10% VAT) |
-| 🇺🇸 | US Dollar | USD | ❌ no federal scheme |
-| 🇬🇧 | British Pound | GBP | ❌ abolished post-Brexit |
-| 🇹🇷 | Turkish Lira | TRY | ✅ above ₺1,200 (20% VAT) |
-| 🇨🇭 | Swiss Franc | CHF | ✅ above Fr. 300 (8.1% VAT) |
+| Currency | Code | Tax-Free |
+|---|---|---|
+| Japanese Yen | JPY | above ¥5,500 (10% VAT) |
+| US Dollar | USD | no federal scheme |
+| British Pound | GBP | abolished post-Brexit |
+| Turkish Lira | TRY | above ₺1,200 (20% VAT) |
+| Swiss Franc | CHF | above Fr. 300 (8.1% VAT) |
 
 Each currency comes with its own color theme, correct decimal handling (JPY is integer-only), and either a tax-free calculator or an inline explanation of why the scheme doesn't apply.
 
@@ -110,10 +109,6 @@ Add items to a running list as you shop. Each entry stores the foreign amount an
 ### Cash Budget Tracker
 
 Set a cash budget in the foreign currency and tap **Spend** after each purchase. TABI subtracts it from your remaining balance and shows a progress bar. A **Find ATM** button is available when the balance runs low. Budgets are stored per currency so switching destinations doesn't reset your data.
-
-### Offline Support
-
-After the first successful rate fetch, everything is cached in localStorage. On subsequent visits — online or not — TABI loads instantly and shows when the rate was last updated. The previous day's rate is kept alongside so you can see if the rate has moved.
 
 ### PWA — Installable
 
