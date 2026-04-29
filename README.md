@@ -2,9 +2,7 @@
 
 <img src="client/public/tabi-logo-horizontal.svg" alt="TABI Currency Converter" height="52"/>
 
-# TABI
-
-**Currency Converter for Travellers** · v0.1.0
+**TABI Currency Converter** · v0.1.0
 
 *Real card rates. Shopping list. Cash budget tracker. Tax-free calculator. Installable as an app.*
 
