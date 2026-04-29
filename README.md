@@ -46,7 +46,7 @@ The mid-market rate you see on Google is the interbank rate — no card provider
 
 Beyond the rate, TABI covers what other converters don't touch at all:
 
-- **No mental math while shopping** — the shopping list tracks your basket in real time, running total in both currencies included
+- **No mental math while shopping** — the shopping list tracks your basket, running total in both currencies included
 - **Sale prices, correctly converted** — apply a discount percentage before converting, not after
 - **Cash stays accountable** — set a daily cash budget and log each purchase against it
 - **Tax-free thresholds** — know instantly whether a purchase qualifies for a VAT refund, and by how much
