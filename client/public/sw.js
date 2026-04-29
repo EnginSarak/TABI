@@ -6,9 +6,10 @@ const APP_SHELL = [
   '/index.html',
   '/site.webmanifest',
   '/favicon.ico',
-  '/apple-touch-icon.png',
-  '/android-chrome-192x192.png',
-  '/android-chrome-512x512.png',
+  '/favicon-16x16.png',
+  '/favicon-32x32.png',
+  '/favicon-180x180.png',
+  '/tabi-icon.png',
 ];
 
 self.addEventListener('install', event => {
