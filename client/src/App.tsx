@@ -6,6 +6,7 @@ import CurrencyConverter from "./components/CurrencyConverter";
 import CurrencySelector from "./components/CurrencySelector";
 import { useLanguage } from "./contexts/LanguageContext";
 import type { Language } from "./lib/translations";
+import { CURRENCIES } from "./lib/currencies";
 
 function isMobileDevice(): boolean {
   const ua = navigator.userAgent;
@@ -18,7 +19,7 @@ function DesktopBlock() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { const t = requestAnimationFrame(() => setMounted(true)); return () => cancelAnimationFrame(t); }, []);
 
-  const primary = "#3D6B5E";
+  const primary = CURRENCIES["JPY"].theme.primary;
 
   return (
     <div className="fixed inset-0" style={{ background: "#000" }}>
@@ -103,15 +104,8 @@ function DesktopBlock() {
               <h1 className="font-semibold text-[17px] tracking-wide text-white">
                 Best experienced on mobile
               </h1>
-              <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
-                Open TABI on your iPhone or Android for the full experience — built for on-the-go currency conversion while travelling.
-              </p>
             </div>
           </div>
-
-          <p className="text-[10px] tracking-[0.2em] uppercase" style={{ color: "rgba(255,255,255,0.2)" }}>
-            © TABI Currency Converter
-          </p>
 
         </div>
       </div>
