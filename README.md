@@ -34,8 +34,7 @@
   - [PWA — Installable](#pwa--installable)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
-- [Local Development](#local-development)
-
+  
 ---
 
 ## Why TABI?
