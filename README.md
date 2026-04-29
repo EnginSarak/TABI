@@ -128,7 +128,7 @@ TABI is a Progressive Web App. On iOS, a native-style prompt walks you through S
 ---
 
 ## Project Structure
-
+ 
 ```
 TABI-main/
 ├── client/
@@ -165,9 +165,8 @@ TABI-main/
 │           ├── formatter.ts               Number formatting (de-DE locale)
 │           ├── storage.ts                 localStorage helpers + usePersistentState
 │           └── translations.ts            EN / DE string map
-└── server/                                Minimal Express static server (optional)
 ```
-
+ 
 ---
 
 <div align="center">
