@@ -49,6 +49,7 @@ Beyond the rate, TABI covers what other converters don't touch at all:
 - **Sale prices, correctly converted** — apply a discount percentage before converting, not after
 - **Cash stays accountable** — set a daily cash budget and log each purchase against it
 - **Tax-free thresholds** — know instantly whether a purchase qualifies for a VAT refund, and by how much
+- **Manual rate override** — tap the rate line to open an input field and enter a custom rate. Useful when you know the exact rate your bank is applying.
 
 No account required. No ads. No backend beyond a daily rate fetch from a free public API.
 
