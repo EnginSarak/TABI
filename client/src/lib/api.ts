@@ -24,14 +24,13 @@ export function getCachedRate(foreignCurrency = "JPY"): { rate: number; timestam
 
 export async function fetchExchangeRate(foreignCurrency = "JPY"): Promise<{ rate: number; timestamp: string; prevRate?: number } | null> {
   try {
-    const resp = await fetch("https://open.er-api.com/v6/latest/EUR");
+    const resp = await fetch("https://api.frankfurter.app/latest?from=EUR");
     if (!resp.ok) return null;
     const data = await resp.json();
     if (!data.rates || !data.rates[foreignCurrency]) return null;
 
-    const ts = new Date(data.time_last_update_unix * 1000).toLocaleDateString("de-DE", {
-      day: "2-digit", month: "2-digit", year: "numeric",
-    });
+    const [year, month, day] = (data.date as string).split("-");
+    const ts = `${day}.${month}.${year}`;
 
     const existing = getCachedRates();
     if (existing && existing.timestamp !== ts) {
