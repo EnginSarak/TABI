@@ -42,6 +42,7 @@ function ProviderToggle({ provider, onProviderChange, language, bankFeePct, onBa
   }
 
   function handleFeeCancel() {
+    onBankFeeChange(0);
     setIsEditingFee(false);
     setFeeEditValue("");
   }
