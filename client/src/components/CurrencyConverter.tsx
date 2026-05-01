@@ -125,6 +125,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const [cashBudget, setCashBudget] = useState<string>(() => lsGet(`tabi-cash-budget-${currency}`, ""));
   const [cashSpent,  setCashSpent]  = useState<number>(() => lsGet(`tabi-cash-spent-${currency}`, 0));
   const [manualRate, setManualRate] = useState<number | null>(() => lsGet(`tabi-manual-rate-${currency}`, null));
+  const [bankFeePct, setBankFeePct] = usePersistentState<number>("tabi-bank-fee", 0);
 
   const [inputValue,  setInputValue]  = useState<string>("");
   const [baseRate,    setBaseRate]    = useState<number | null>(null);
@@ -223,7 +224,8 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
     if (!rate) return 0;
     const amount = effectiveInputAmount();
     const converted = direction === "eur-foreign" ? amount * rate : amount / rate;
-    return taxFree && taxFreeMin && taxVatRate ? converted / (1 + taxVatRate) : converted;
+    const afterTax = taxFree && taxFreeMin && taxVatRate ? converted / (1 + taxVatRate) : converted;
+    return afterTax * (1 + bankFeePct / 100);
   }
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -365,7 +367,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
 
       <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1.5rem)" }}>
 
-        <ProviderToggle provider={provider} onProviderChange={setProvider} isDark={isDark} language={language} />
+        <ProviderToggle provider={provider} onProviderChange={setProvider} isDark={isDark} language={language} bankFeePct={bankFeePct} onBankFeeChange={setBankFeePct} />
 
         <div className="space-y-2">
           <label className="block text-[11px] font-semibold tracking-widest uppercase" style={{ color: theme.textMuted }}>
