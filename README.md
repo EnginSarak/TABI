@@ -85,6 +85,8 @@ Select your card provider and TABI adjusts the conversion rate accordingly. A li
 
 Rates are sourced from [open.er-api.com](https://open.er-api.com) and refreshed daily.
 
+A **Bank Fee** button next to the card selector lets you enter an additional percentage charged by your bank — tap it, type a number, and the fee is factored into the result automatically.
+
 ### Discount Presets
 
 One-tap presets for the most common sale formats — 10%, 20%, 30%, 50%, 70% — plus a free-drag slider for anything in between. The discount is applied to the input amount before converting, so the result is always the actual price you'd pay.
