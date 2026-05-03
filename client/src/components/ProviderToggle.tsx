@@ -70,7 +70,7 @@ function ProviderToggle({ provider, onProviderChange, language, bankFeePct, onBa
         </label>
         <button
           onClick={handleFeeClick}
-          className="inline-flex items-center gap-1 text-[10px] font-bold underline"
+          className="inline-flex items-center gap-1 text-[10px] font-bold"
           style={{ color: theme.primary }}
         >
           {language === "de" ? "Bankgebühr" : "Bank Fee"}
