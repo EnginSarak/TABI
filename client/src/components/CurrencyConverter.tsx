@@ -142,9 +142,9 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const cashMountedRef = useRef(false);
 
   const TICKER_PROVIDERS = [
-    { label: "Mastercard", divisor: 1.0045 },
-    { label: "Visa",        divisor: 1.0055 },
-    { label: "Amex",        divisor: 1.025  },
+    { label: "Mastercard", divisor: 1.002  },
+    { label: "Visa",        divisor: 1.005  },
+    { label: "Amex",        divisor: 1.02   },
   ] as const;
   const [tickerIndex, setTickerIndex] = useState(0);
   const [tickerKey,   setTickerKey]   = useState(0);
@@ -205,9 +205,9 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
     const r = manualRate !== null ? manualRate : baseRate;
     if (!r) return 0;
     if (manualRate !== null) return manualRate;
-    if (provider === "mastercard") return r / 1.0045;
-    if (provider === "visa")       return r / 1.0055;
-    return r / 1.025;
+    if (provider === "mastercard") return r / 1.002;
+    if (provider === "visa")       return r / 1.005;
+    return r / 1.02;
   }
 
   const isIntegerMode = direction === "foreign-eur" && decimals === 0;
