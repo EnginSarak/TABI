@@ -41,15 +41,15 @@
 
 Most currency converters show you a number and stop there. TABI is built around what actually happens when you spend money abroad.
 
-The mid-market rate you see on Google is the interbank rate — no card provider passes that on to you. Mastercard, Visa, and Amex each apply their own markup before it hits your statement. TABI factors that in upfront, so the number you see is the number you pay.
+The mid-market rate you see on Google is the interbank rate, and no card provider passes that on to you. Mastercard, Visa, and Amex each apply their own markup before it hits your statement. TABI factors that in upfront, so the number you see is the number you pay.
 
 Beyond the rate, TABI covers what other converters don't touch at all:
 
-- **No mental math while shopping** — the shopping list tracks your basket, running total in both currencies included
-- **Sale prices, correctly converted** — apply a discount percentage before converting, not after
-- **Cash stays accountable** — set a daily cash budget and log each purchase against it
-- **Tax-free thresholds** — know instantly whether a purchase qualifies for a VAT refund, and by how much
-- **Manual rate override** — tap the rate line to open an input field and enter a custom rate. Useful when you know the exact rate your bank is applying.
+- The shopping list tracks your basket while you shop, with a running total in both currencies, so there's no mental math
+- A discount percentage can be applied before converting, not after, so sale prices come out correct
+- A daily cash budget keeps cash spending accountable, with each purchase logged against it
+- Tax-free thresholds show instantly whether a purchase qualifies for a VAT refund, and by how much
+- Tapping the rate line opens an input field for a manual rate override, useful when you know the exact rate your bank is applying
 
 No account required. No ads. No backend beyond a daily rate fetch from a free public API.
 
@@ -57,7 +57,7 @@ No account required. No ads. No backend beyond a daily rate fetch from a free pu
 
 ## Supported Currencies
 
-EUR is always the home currency. Conversion works in both directions — switch with one tap, and the amount stays in the field.
+EUR is always the home currency. Conversion works in both directions: switch with one tap, and the amount stays in the field.
 
 | Currency | Code | Tax-Free |
 |---|---|---|
@@ -85,11 +85,11 @@ Select your card provider and TABI adjusts the conversion rate accordingly. A li
 
 Rates are sourced from [open.er-api.com](https://open.er-api.com) and refreshed daily.
 
-A **Bank Fee** button next to the card selector lets you enter an additional percentage charged by your bank — tap it, type a number, and the fee is factored into the result automatically.
+A **Bank Fee** button next to the card selector lets you enter an additional percentage charged by your bank: tap it, type a number, and the fee is factored into the result automatically.
 
 ### Discount Presets
 
-One-tap presets for the most common sale formats — 10%, 20%, 30%, 50%, 70% — plus a free-drag slider for anything in between. The discount is applied to the input amount before converting, so the result is always the actual price you'd pay.
+One-tap presets cover the most common sale formats (10%, 20%, 30%, 50%, 70%), plus a free-drag slider for anything in between. The discount is applied to the input amount before converting, so the result is always the actual price you'd pay.
 
 ### Tax-Free Mode
 
@@ -145,7 +145,7 @@ TABI-main/
 │   │   ├── logos/                        Mastercard, Visa, Amex SVGs (color + white)
 │   │   └── sw.js                         Service Worker
 │   └── src/
-│       ├── App.tsx                        Root — dark mode, language, currency context
+│       ├── App.tsx                        Root: dark mode, language, currency context
 │       ├── contexts/
 │       │   ├── CurrencyContext.tsx        Active currency + theme provider
 │       │   └── LanguageContext.tsx        EN / DE language provider
