@@ -4,7 +4,7 @@
 
 **TABI Currency Converter** · Version 1.0.0
 
-*Real card rates. Shopping list. Cash budget tracker. Tax-free calculator. Made for travellers.*
+*Live card rates. Shopping list. Cash budget tracker. Tax-free calculator. Made by a traveler, for travelers*
 
 *By [Engin Sarak](https://github.com/EnginSarak)*
 
