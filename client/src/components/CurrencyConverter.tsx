@@ -7,6 +7,7 @@ import ExchangeRateDisplay from "./ExchangeRateDisplay";
 import ShoppingList, { type ShoppingItem } from "./ShoppingList";
 import SettingsModal from "./SettingsModal";
 import TaxFreeInfoModal from "./TaxFreeInfoModal";
+import LegalModal, { type LegalTab } from "./LegalModal";
 import ChfSymbol from "./ChfSymbol";
 import { fetchExchangeRate, getCachedRate } from "../lib/api";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -275,6 +276,8 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
   const taxFreeEligible = taxFreeMin ? currentForeign >= taxFreeMin : false;
 
   const DISCOUNT_PRESETS = [0, 10, 20, 30, 50, 70];
+  const [legalTab, setLegalTab] = useState<LegalTab | null>(null);
+
   const atmLink = "https://www.google.com/maps/search/ATM";
 
   return (
@@ -686,6 +689,23 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
         </div>
       </div>
 
+      <div className="px-4 pt-1 pb-5 flex items-center justify-center gap-2" data-nosnippet>
+        {(["imprint", "privacy"] as LegalTab[]).map((key, i) => (
+          <React.Fragment key={key}>
+            {i > 0 && <span className="text-[10px]" style={{ color: theme.borderLight }}>·</span>}
+            <button
+              onClick={() => setLegalTab(key)}
+              className="text-[10px] tracking-wide no-underline active:opacity-60"
+              style={{ color: theme.textSubtle, opacity: 0.55, transition: "opacity 0.2s ease" }}
+            >
+              {key === "imprint"
+                ? (language === "de" ? "Impressum" : "Imprint")
+                : (language === "de" ? "Datenschutz" : "Privacy")}
+            </button>
+          </React.Fragment>
+        ))}
+      </div>
+
       <ShoppingList
         items={shoppingItems} isOpen={isListOpen} onClose={() => setIsListOpen(false)}
         onRemoveItem={id => setShoppingItems(prev => prev.filter(i => i.id !== id))}
@@ -695,6 +715,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
 
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} language={language} onLanguageChange={setLanguage} />
       <TaxFreeInfoModal isOpen={showTaxFreeInfo} onClose={() => setShowTaxFreeInfo(false)} language={language} />
+      <LegalModal isOpen={legalTab !== null} initialTab={legalTab ?? "imprint"} onClose={() => setLegalTab(null)} language={language} />
 
       {showIOSPrompt && <InstallPrompt onDismiss={dismissIOSPrompt} language={language} platform={installPlatform} primary={theme.primary} />}
     </div>

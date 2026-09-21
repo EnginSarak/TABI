@@ -6,6 +6,7 @@ import { useCurrency } from "../contexts/CurrencyContext";
 import type { Language } from "../lib/translations";
 import ChfSymbol from "./ChfSymbol";
 import FlagIcon from "./FlagIcon";
+import LegalModal, { type LegalTab } from "./LegalModal";
 
 const CURRENCY_LIST: ForeignCurrency[] = ["JPY", "USD", "GBP", "TRY", "CHF"];
 
@@ -190,6 +191,8 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
     setTimeout(() => setCurrency(selected), 420);
   }, [setCurrency, selected]);
 
+  const [legalTab, setLegalTab] = useState<LegalTab | null>(null);
+
   const theme = displayedTheme;
 
   return (
@@ -319,9 +322,32 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
                 </button>
               ))}
             </div>
+
+            <div className="flex items-center justify-center gap-2" data-nosnippet>
+              {(["imprint", "privacy"] as LegalTab[]).map((key, i) => (
+                <React.Fragment key={key}>
+                  {i > 0 && <span className="text-[10px] text-white/15">·</span>}
+                  <button
+                    onClick={() => setLegalTab(key)}
+                    className="text-[10px] tracking-wide text-white/25 no-underline active:opacity-60"
+                  >
+                    {key === "imprint"
+                      ? (language === "de" ? "Impressum" : "Imprint")
+                      : (language === "de" ? "Datenschutz" : "Privacy")}
+                  </button>
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         </div>
       </div>
+
+      <LegalModal
+        isOpen={legalTab !== null}
+        initialTab={legalTab ?? "imprint"}
+        onClose={() => setLegalTab(null)}
+        language={language}
+      />
     </div>
   );
 }
