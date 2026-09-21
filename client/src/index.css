@@ -87,3 +87,12 @@ input[type="range"]::-moz-range-thumb {
   border: 2px solid white;
   box-shadow: 0 1px 4px rgba(0,0,0,0.2);
 }
+
+@keyframes tabiLegalEnter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tabi-legal-enter {
+  animation: tabiLegalEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
