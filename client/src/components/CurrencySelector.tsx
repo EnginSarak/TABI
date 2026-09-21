@@ -323,7 +323,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
               ))}
             </div>
 
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-2" data-nosnippet>
               {(["imprint", "privacy"] as LegalTab[]).map((key, i) => (
                 <React.Fragment key={key}>
                   {i > 0 && <span className="text-[10px] text-white/15">·</span>}

@@ -689,7 +689,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
         </div>
       </div>
 
-      <div className="px-4 pt-1 pb-5 flex items-center justify-center gap-2">
+      <div className="px-4 pt-1 pb-5 flex items-center justify-center gap-2" data-nosnippet>
         {(["imprint", "privacy"] as LegalTab[]).map((key, i) => (
           <React.Fragment key={key}>
             {i > 0 && <span className="text-[10px]" style={{ color: theme.borderLight }}>·</span>}
