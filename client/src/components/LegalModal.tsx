@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { useCurrency } from "../contexts/CurrencyContext";
+import type { CurrencyTheme } from "../lib/currencies";
 import type { Language } from "../lib/translations";
 
 type LegalTab = "imprint" | "privacy";
@@ -10,6 +10,7 @@ interface Props {
   initialTab: LegalTab;
   onClose: () => void;
   language: Language;
+  theme: CurrencyTheme;
 }
 
 interface Section {
@@ -45,9 +46,7 @@ function loadLegal(): Promise<LegalData | null> {
   return pending;
 }
 
-function LegalModal({ isOpen, initialTab, onClose, language }: Props) {
-  const { config } = useCurrency();
-  const { theme } = config;
+function LegalModal({ isOpen, initialTab, onClose, language, theme }: Props) {
   const [visible, setVisible] = useState(false);
   const [rendered, setRendered] = useState(false);
   const [tab, setTab] = useState<LegalTab>(initialTab);

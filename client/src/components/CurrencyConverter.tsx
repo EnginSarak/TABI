@@ -715,7 +715,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
 
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} language={language} onLanguageChange={setLanguage} />
       <TaxFreeInfoModal isOpen={showTaxFreeInfo} onClose={() => setShowTaxFreeInfo(false)} language={language} />
-      <LegalModal isOpen={legalTab !== null} initialTab={legalTab ?? "imprint"} onClose={() => setLegalTab(null)} language={language} />
+      <LegalModal isOpen={legalTab !== null} initialTab={legalTab ?? "imprint"} onClose={() => setLegalTab(null)} language={language} theme={theme} />
 
       {showIOSPrompt && <InstallPrompt onDismiss={dismissIOSPrompt} language={language} platform={installPlatform} primary={theme.primary} />}
     </div>

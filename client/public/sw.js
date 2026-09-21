@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tabi-v1';
+const CACHE_NAME = 'tabi-v2';
 const API_CACHE  = 'tabi-api-v1';
 
 const APP_SHELL = [
@@ -32,6 +32,10 @@ self.addEventListener('activate', event => {
   );
 });
 
+function isDocumentRequest(request) {
+  return request.mode === 'navigate' || request.destination === 'document';
+}
+
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
@@ -46,6 +50,19 @@ self.addEventListener('fetch', event => {
           return res;
         })
         .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  if (isDocumentRequest(event.request)) {
+    event.respondWith(
+      fetch(event.request)
+        .then(res => {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(c => c.put('/index.html', clone));
+          return res;
+        })
+        .catch(() => caches.match(event.request).then(cached => cached || caches.match('/index.html')))
     );
     return;
   }

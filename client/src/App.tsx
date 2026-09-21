@@ -7,6 +7,7 @@ import CurrencySelector from "./components/CurrencySelector";
 import { useLanguage } from "./contexts/LanguageContext";
 import type { Language } from "./lib/translations";
 import { CURRENCIES } from "./lib/currencies";
+import LegalModal, { type LegalTab } from "./components/LegalModal";
 
 function isMobileDevice(): boolean {
   const ua = navigator.userAgent;
@@ -17,9 +18,12 @@ function isMobileDevice(): boolean {
 
 function DesktopBlock() {
   const [mounted, setMounted] = useState(false);
+  const [legalTab, setLegalTab] = useState<LegalTab | null>(null);
   useEffect(() => { const t = requestAnimationFrame(() => setMounted(true)); return () => cancelAnimationFrame(t); }, []);
 
-  const primary = CURRENCIES["JPY"].theme.primary;
+  const theme = CURRENCIES["JPY"].theme;
+  const primary = theme.primary;
+  const language: Language = navigator.language.toLowerCase().startsWith("de") ? "de" : "en";
 
   return (
     <div className="fixed inset-0" style={{ background: "#000" }}>
@@ -107,8 +111,32 @@ function DesktopBlock() {
             </div>
           </div>
 
+          <div className="flex items-center justify-center gap-2" data-nosnippet>
+            {(["imprint", "privacy"] as LegalTab[]).map((key, i) => (
+              <React.Fragment key={key}>
+                {i > 0 && <span className="text-[10px] text-white/15">·</span>}
+                <button
+                  onClick={() => setLegalTab(key)}
+                  className="text-[10px] tracking-wide text-white/25 no-underline active:opacity-60"
+                >
+                  {key === "imprint"
+                    ? (language === "de" ? "Impressum" : "Imprint")
+                    : (language === "de" ? "Datenschutz" : "Privacy")}
+                </button>
+              </React.Fragment>
+            ))}
+          </div>
+
         </div>
       </div>
+
+      <LegalModal
+        isOpen={legalTab !== null}
+        initialTab={legalTab ?? "imprint"}
+        onClose={() => setLegalTab(null)}
+        language={language}
+        theme={theme}
+      />
     </div>
   );
 }

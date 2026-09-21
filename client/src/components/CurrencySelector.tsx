@@ -347,6 +347,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
         initialTab={legalTab ?? "imprint"}
         onClose={() => setLegalTab(null)}
         language={language}
+        theme={theme}
       />
     </div>
   );
