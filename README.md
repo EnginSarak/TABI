@@ -2,7 +2,7 @@
 
 <img src="client/public/tabi-logo-horizontal.svg" alt="TABI Currency Converter" height="52"/>
 
-**TABI Currency Converter** · Version 1.0.0
+**TABI Currency Converter** · Version 1.0.1
 
 *Live card rates. Shopping list. Cash budget tracker. Tax-free calculator. Made by a traveler, for travelers*
 
@@ -15,7 +15,7 @@
 ![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-**[tabi-cc.vercel.app](https://tabi-cc.vercel.app)**
+**[tabi.enginsarak.com](https://tabi.enginsarak.com)**
 
 </div>
 
@@ -34,6 +34,7 @@
   - [PWA — Installable](#pwa--installable)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
+- [Changelog](#changelog)
   
 ---
 
@@ -170,6 +171,16 @@ TABI-main/
 │           └── translations.ts            EN / DE string map
 ```
  
+---
+
+## Changelog
+
+### 1.0.1 (2026-09-23)
+
+#### Changed
+- The app has its own address: `tabi.enginsarak.com`. The old `tabi-cc.vercel.app` and
+  `tabi-kohl.vercel.app` redirect there, so links that are already out keep working.
+
 ---
 
 <div align="center">
