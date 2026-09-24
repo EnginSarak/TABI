@@ -250,7 +250,7 @@ function CurrencySelector({ language, onLanguageChange }: Props) {
         <div className="w-full max-w-sm flex flex-col gap-6 items-center">
           <div className="text-center space-y-3">
             <img
-              src="/tabi-logo-horizontal.svg"
+              src="/tabi-logo-horizontal-dark.svg"
               alt="TABI"
               className="h-[52px] mx-auto w-auto"
               style={{ filter: "brightness(0) invert(1) opacity(0.9)" }}

@@ -306,7 +306,7 @@ function CurrencyConverter({ isDark }: CurrencyConverterProps) {
 
           <div className="flex-1 flex justify-center items-center h-full px-2">
             <img
-              src="/tabi-logo-horizontal.svg" alt="TABI Currency Converter"
+              src="/tabi-logo-horizontal-dark.svg" alt="TABI Currency Converter"
               className="h-full max-h-[60px] w-auto object-contain select-none"
               style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))" }}
               draggable={false}

@@ -72,7 +72,7 @@ function DesktopBlock() {
         <div className="w-full max-w-sm flex flex-col gap-8 items-center">
 
           <img
-            src="/tabi-logo-horizontal.svg"
+            src="/tabi-logo-horizontal-dark.svg"
             alt="TABI"
             style={{ height: "52px", width: "auto", filter: "brightness(0) invert(1) opacity(0.9)" }}
             draggable={false}

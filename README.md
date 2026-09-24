@@ -1,8 +1,11 @@
 <div align="center">
 
-<img src="client/public/tabi-logo-horizontal.svg" alt="TABI Currency Converter" height="52"/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="client/public/tabi-logo-horizontal-dark.svg"/>
+  <img src="client/public/tabi-logo-horizontal.svg" alt="TABI Currency Converter" height="52"/>
+</picture>
 
-**TABI Currency Converter** · Version 1.0.1
+**TABI Currency Converter** · Version 1.0.2
 
 *Live card rates. Shopping list. Cash budget tracker. Tax-free calculator. Made by a traveler, for travelers*
 
@@ -140,8 +143,8 @@ TABI-main/
 │   ├── vite.config.js
 │   ├── tailwind.config.js
 │   ├── public/
-│   │   ├── tabi-logo-horizontal.svg
-│   │   ├── tabi-logo-horizontal-dark.svg
+│   │   ├── tabi-logo-horizontal.svg      Dark mark, for light backgrounds
+│   │   ├── tabi-logo-horizontal-dark.svg Light mark, for dark backgrounds
 │   │   ├── tabi-icon.svg / .png
 │   │   ├── logos/                        Mastercard, Visa, Amex SVGs (color + white)
 │   │   └── sw.js                         Service Worker
@@ -174,6 +177,14 @@ TABI-main/
 ---
 
 ## Changelog
+
+### 1.0.2 (2026-09-24)
+
+#### Fixed
+- The two logo files had their names the wrong way round: the one called `-dark` was the
+  dark mark meant for light backgrounds. They are named after the scheme they belong to
+  now, the way every other repository here does it, and the README picks between them
+  instead of showing the white one on white.
 
 ### 1.0.1 (2026-09-23)
 
