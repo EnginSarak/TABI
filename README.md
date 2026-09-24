@@ -5,7 +5,7 @@
   <img src="client/public/tabi-logo-horizontal.svg" alt="TABI Currency Converter" height="52"/>
 </picture>
 
-**TABI Currency Converter** · Version 1.0.2
+**TABI Currency Converter** · Version 1.0.0
 
 *Live card rates. Shopping list. Cash budget tracker. Tax-free calculator. Made by a traveler, for travelers*
 
@@ -37,7 +37,6 @@
   - [PWA — Installable](#pwa--installable)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
-- [Changelog](#changelog)
   
 ---
 
@@ -174,24 +173,6 @@ TABI-main/
 │           └── translations.ts            EN / DE string map
 ```
  
----
-
-## Changelog
-
-### 1.0.2 (2026-09-24)
-
-#### Fixed
-- The two logo files had their names the wrong way round: the one called `-dark` was the
-  dark mark meant for light backgrounds. They are named after the scheme they belong to
-  now, the way every other repository here does it, and the README picks between them
-  instead of showing the white one on white.
-
-### 1.0.1 (2026-09-23)
-
-#### Changed
-- The app has its own address: `tabi.enginsarak.com`. The old `tabi-cc.vercel.app` and
-  `tabi-kohl.vercel.app` redirect there, so links that are already out keep working.
-
 ---
 
 <div align="center">
