@@ -2,6 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="client/public/tabi-logo-horizontal-dark.svg"/>
+  <source media="(prefers-color-scheme: light)" srcset="client/public/tabi-logo-horizontal.svg"/>
   <img src="client/public/tabi-logo-horizontal.svg" alt="TABI Currency Converter" height="52"/>
 </picture>
 
