@@ -181,9 +181,8 @@ TABI-main/
 
 ### 1.0.1 (2026-09-23)
 
-#### Changed
-- The app has its own address: `tabi.enginsarak.com`. The old `tabi-cc.vercel.app` and
-  `tabi-kohl.vercel.app` redirect there, so links that are already out keep working.
+#### Fixed
+- Minor bug fixes.
 
 ---
 
